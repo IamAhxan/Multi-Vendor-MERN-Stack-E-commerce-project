@@ -5,14 +5,14 @@ import { navItems } from '../../../static/data';
 
 const Navbar = ({ active }) => {
     return (
-        <div className={`${styles.normalFlex}`}>
+        <div className={`block 800px:${styles.normalFlex}`}>
             {
                 navItems && navItems.map((i, index) => (
                     <div className="flex" key={index}>
                         <Link
                             to={i.url}
-                            className={`${active === index + 1 ? "text-[#17dd1f]" : "text-white"
-                                } font-medium px-6 cursor-pointer`}
+                            className={`${active === index + 1 ? "text-[#17dd1f]" : "text-black 800px:text-white"
+                                } font-medium px-6 cursor-pointer pb-[30px]`}
                         >
                             {i.title}
                         </Link>
