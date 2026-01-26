@@ -14,7 +14,7 @@ app.use(cors({
     origin: "http://localhost:5173", // frontend URL
     credentials: true, // allow cookies
 }));
-app.use("/", express.static("upload"))
+app.use("/upload", express.static("upload"));
 
 
 // import routes

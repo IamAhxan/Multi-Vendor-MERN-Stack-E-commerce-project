@@ -178,7 +178,7 @@ router.post("/login-user", catchAsyncErrors(async (req, res, next) => {
 
 router.get("/getuser", isAuthenticated, catchAsyncErrors(async (req, res, next) => {
     try {
-        const user = await User.findById(req.user.id);
+        const user = await User.findById(req.user._id);
 
         if (!user) {
             return next(new ErrorHandler("User does not exist", 400))
@@ -190,7 +190,26 @@ router.get("/getuser", isAuthenticated, catchAsyncErrors(async (req, res, next) 
         })
 
     } catch (error) {
-        return next(new ErrorHandler(getSystemErrorMap.message, 500))
+        return next(new ErrorHandler(error.message, 500))
+    }
+}))
+
+
+router.get("/logout", isAuthenticated, catchAsyncErrors(async (req, res, next) => {
+    try {
+        res.cookie("token", null, {
+            expires: new Date(Date.now()),
+            httpOnly: true,
+        });
+        res.status(201).json({
+            success: true,
+            message: "Logout successfully"
+        });
+
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500))
+
     }
 }))
 
