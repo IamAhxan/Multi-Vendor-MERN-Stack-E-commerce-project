@@ -8,6 +8,8 @@ import EventsPage from "../src/pages/EventsPage/EventsPage.jsx"
 import FAQPage from "../src/pages/FAQPage.jsx"
 import ProductDetailsPage from "../src/pages/ProductDetailsPage.jsx"
 import ProfilePage from "../src/pages/ProfilePage.jsx"
+import SellerCreatePage from "../src/pages/ShopCreatePage.jsx"
+import SellerActivationPage from "../src/pages/SellerActivationPage.jsx"
 
 
 export {
@@ -20,5 +22,7 @@ export {
     EventsPage,
     FAQPage,
     ProductDetailsPage,
-    ProfilePage
+    ProfilePage,
+    SellerCreatePage,
+    SellerActivationPage
 }

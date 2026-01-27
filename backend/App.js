@@ -3,6 +3,7 @@ import ErrorMiddleware from './middleware/error.js';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser'
 import user from './controller/userController.js'
+import shop from './controller/shopController.js'
 import cors from 'cors'
 
 const app = express();
@@ -20,6 +21,7 @@ app.use("/upload", express.static("upload"));
 // import routes
 
 app.use("/user", user);  // <-- Mount your user routes under /api
+app.use("/shop", shop);  // <-- Mount your Shop routes under /api
 
 
 // Error handler middleware

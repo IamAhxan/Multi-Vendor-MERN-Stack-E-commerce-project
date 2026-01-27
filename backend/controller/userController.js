@@ -82,7 +82,7 @@ router.post(
             });
         } catch (error) {
             console.error("Unexpected create-user error:", error);
-            next(new ErrorHandler("Internal server error", 500));
+            return next(new ErrorHandler("Internal server error", 500));
         }
     })
 );
