@@ -20,6 +20,7 @@ const SellerActivationPage = () => {
                 setError(false);
             } catch (err) {
                 setError(true);
+                toast.error(err)
             } finally {
                 setLoading(false);
             }
@@ -27,7 +28,7 @@ const SellerActivationPage = () => {
 
 
         activateAccount();
-    }, [activation_token])
+    }, [])
 
     return (
         <div

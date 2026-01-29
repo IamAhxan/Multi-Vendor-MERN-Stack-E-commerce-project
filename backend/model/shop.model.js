@@ -53,14 +53,17 @@ const shopSchema = new mongoose.Schema({
 
 
 //  Hash password
-shopSchema.pre("save", async function (next) {
+shopSchema.pre("save", async function () {
+    // If password isn't modified, just exit the function
     if (!this.isModified("password")) {
-        return next();
+        return;
     }
 
-
+    // Hash the password
     this.password = await bcrypt.hash(this.password, 10);
-    next();
+
+    // No next() call needed here! 
+    // Mongoose knows to proceed because the async function finished.
 });
 
 // jwt token
