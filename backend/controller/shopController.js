@@ -145,7 +145,9 @@ import ErrorHandler from "../utils/ErrorHandler.js";
 import { upload } from "../multer.js";
 import catchAsyncErrors from "../middleware/catchAsyncError.js";
 import sendMail from "../utils/sendMail.js";
-import sendToken from "../utils/jwtToken.js";
+import sendShopToken from "../utils/shopToken.js";
+import { isAuthenticated, isSeller } from './../middleware/auth.js'
+
 
 const router = express.Router();
 
@@ -297,7 +299,8 @@ router.post(
                 zipCode: Number(zipCode),
             });
 
-            sendToken(seller, 201, res);
+            sendShopToken(seller, 201, res)
+
         } catch (error) {
             console.error("DETAILED ERROR:", error);
             return next(new ErrorHandler(error.message, 500));
@@ -306,5 +309,49 @@ router.post(
     })
 );
 
+
+// Shop Login
+
+router.post("/login-shop", catchAsyncErrors(async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return next(new ErrorHandler("Please provide all credentials", 400))
+        }
+
+        const seller = await Shop.findOne({ email }).select("+password");
+        if (!seller) {
+            return next(new ErrorHandler("User Does not exist!", 404))
+        }
+
+        const isPasswordValid = await seller.comparePassword(password);
+        if (!isPasswordValid) {
+            return next(new ErrorHandler("Incorrect Password", 400))
+        }
+
+        sendShopToken(seller, 201, res)
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500))
+    }
+}))
+
+// Load Shop Data
+router.get("/getseller", isSeller, catchAsyncErrors(async (req, res, next) => {
+    try {
+        const seller = await Shop.findById(req.seller._id);
+
+        if (!seller) {
+            return next(new ErrorHandler("Seller does not exist", 400))
+        }
+        console.log(seller)
+        res.status(200).json({
+            success: true,
+            seller
+        })
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500))
+    }
+}))
 
 export default router;

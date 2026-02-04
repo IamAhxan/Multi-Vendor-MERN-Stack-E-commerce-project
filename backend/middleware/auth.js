@@ -2,6 +2,7 @@ import ErrorHandler from "../utils/ErrorHandler.js";
 import catchAsyncErrors from "./catchAsyncError.js"
 import jwt from "jsonwebtoken"
 import User from '../model/user.model.js'
+import Shop from "../model/shop.model.js";
 
 export const isAuthenticated = catchAsyncErrors(async (req, res, next) => {
     const { token } = req.cookies;
@@ -17,6 +18,25 @@ export const isAuthenticated = catchAsyncErrors(async (req, res, next) => {
     // 3. Find user and attach to request
     // Use decoded.id (ensure this matches what you saved in jwtToken.js)
     req.user = await User.findById(decoded.id);
+
+    // 4. CRITICAL: Move to the next middleware/controller
+    next();
+});
+
+export const isSeller = catchAsyncErrors(async (req, res, next) => {
+    const { seller_token } = req.cookies;
+
+    // 1. Check if token exists
+    if (!seller_token) {
+        return next(new ErrorHandler("Please login to continue", 401));
+    }
+
+    // 2. Verify token
+    const decoded = jwt.verify(seller_token, process.env.JWT_SECRET_KEY);
+
+    // 3. Find user and attach to request
+    // Use decoded.id (ensure this matches what you saved in jwtToken.js)
+    req.seller = await Shop.findById(decoded.id);
 
     // 4. CRITICAL: Move to the next middleware/controller
     next();
