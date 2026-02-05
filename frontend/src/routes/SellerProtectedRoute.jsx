@@ -1,11 +1,16 @@
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";// Optional
+import Loader from "../components/Layout/Loader";
 
 const SellerProtectedRoute = ({ children }) => {
     const { isLoading, isAuthenticated, seller } = useSelector((state) => state.seller);
 
     // 1. Wait for the API call to finish
-    if (!isLoading) {
+    if (isLoading) {
+        return (
+            <Loader />
+        )
+    } else {
         if (!isAuthenticated) {
             return <Navigate to="/shop-login" replace />;
         }
