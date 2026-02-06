@@ -22,7 +22,7 @@ const ShopLogin = () => {
             navigate("/dashboard")
             window.location.reload()
         }).catch((err) => {
-            toast.error(err.response.data.message)
+            toast.error(err)
         })
     }
 
