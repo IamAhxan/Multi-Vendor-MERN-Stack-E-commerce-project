@@ -1,24 +1,27 @@
 import React from 'react'
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteProduct, getAllProductsShop } from '../../redux/actions/product';
 import { Link } from 'react-router-dom';
 import { AiOutlineDelete, AiOutlineEye } from 'react-icons/ai';
-import Loader from '../Layout/Loader';
+import Loader from '../../Layout/Loader';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
+import { deleteEvent, getAllEventsShop } from '../../../redux/actions/event';
 
-const AllProducts = () => {
-    const { products, isLoading } = useSelector((state) => state.products)
+const AllEvents = () => {
+    const { events, isLoading } = useSelector((state) => state.events)
     const { seller } = useSelector((state) => state.seller)
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getAllProductsShop(seller._id));
+        dispatch(getAllEventsShop(seller._id));
     }, [dispatch])
 
+
     const handleDelete = (id) => {
-        dispatch(deleteProduct(id))
+
+        dispatch(deleteEvent(id))
+
     }
 
     const columns = [
@@ -64,7 +67,7 @@ const AllProducts = () => {
     ];
 
     const row = [];
-    products && products.forEach((item) => {
+    events && events.forEach((item) => {
         row.push({
             id: item._id,
             name: item.name,
@@ -77,7 +80,7 @@ const AllProducts = () => {
 
 
     return (
-        <>
+        <div className="w-full flex justify-center">
             {isLoading ? (
                 <Loader />
             ) : (
@@ -85,8 +88,8 @@ const AllProducts = () => {
                     <DataGrid rows={row} columns={columns} pageSize={10} disableRowSelectionOnClick autoHeight />
                 </div>
             )}
-        </>
-    )
+        </div>
+    );
 }
 
-export default AllProducts
+export default AllEvents;

@@ -1,10 +1,12 @@
 import express from "express";
 const router = express.Router();
 import Event from "../model/event.model.js";
+import Shop from "../model/shop.model.js";
 import catchAsyncErrors from "../middleware/catchAsyncError.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
-import Shop from "../model/shop.model.js";
 import { upload } from "../multer.js";
+
+import { isSeller } from "../middleware/auth.js";
 
 
 
@@ -36,5 +38,39 @@ router.post("/create-event", upload.array("images"), catchAsyncErrors(async (req
     }
 }))
 
+// Get All evetns of a shop
+
+router.get("/get-all-events/:id", catchAsyncErrors(async (req, res, next) => {
+    try {
+        const events = await Event.find({ shopId: req.params.id });
+        res.status(201).json({
+            success: true,
+            events
+        })
+    } catch (error) {
+        return next(new ErrorHandler(error, 400));
+    }
+}))
+
+// Delete event of a shop
+
+router.delete("/delete-shop-events/:id", isSeller, catchAsyncErrors(async (req, res, next) => {
+    try {
+        const productId = req.params.id;
+        const event = await Event.findByIdAndDelete(productId);
+        if (!event) {
+            return next(new ErrorHandler("Event Not Found with this id", 500))
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Event Deleted Successfully"
+        })
+
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 400))
+    }
+}))
 
 export default router
