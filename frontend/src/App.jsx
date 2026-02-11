@@ -1,7 +1,7 @@
 import React from "react"
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { LoginPage, SignupPage, ActivationPage, HomePage, ProductsPage, BestSellingPage, EventsPage, FAQPage, ProductDetailsPage, ProfilePage, SellerCreatePage, SellerActivationPage, ShopLoginPage, ShopPage } from "./routes/Routes.js"
-import { ShopDashboardPage, ShopCreateProduct, ShopAllProducts } from "./routes/ShopRoutes.jsx"
+import { ShopDashboardPage, ShopCreateProduct, ShopAllProducts, ShopCreateEvents } from "./routes/ShopRoutes.jsx"
 import { ToastContainer, Bounce, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import Store from './redux/store.js'
@@ -40,6 +40,7 @@ function App() {
         <Route path="/dashboard" element={<SellerProtectedRoute><ShopDashboardPage /></SellerProtectedRoute>} />
         <Route path="/dashboard-create-product" element={<SellerProtectedRoute><ShopCreateProduct /></SellerProtectedRoute>} />
         <Route path="/dashboard-products" element={<SellerProtectedRoute><ShopAllProducts /></SellerProtectedRoute>} />
+        <Route path="/dashboard-create-event" element={<SellerProtectedRoute><ShopCreateEvents /></SellerProtectedRoute>} />
 
       </Routes>
       <ToastContainer

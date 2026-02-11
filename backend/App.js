@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser'
 import user from './controller/userController.js'
 import shop from './controller/shopController.js'
+import event from './controller/eventController.js'
 import product from './controller/productController.js'
 import cors from 'cors'
 
@@ -24,6 +25,7 @@ app.use("/upload", express.static("upload"));
 app.use("/user", user);  // <-- Mount your user routes under /api
 app.use("/shop", shop);  // <-- Mount your Shop routes under /api
 app.use("/product", product);  // <-- Mount your Product routes under /api
+app.use("/event", event);  // <-- Mount your Product routes under /api
 
 
 // Error handler middleware
