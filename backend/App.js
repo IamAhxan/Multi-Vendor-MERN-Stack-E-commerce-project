@@ -6,6 +6,7 @@ import user from './controller/userController.js'
 import shop from './controller/shopController.js'
 import event from './controller/eventController.js'
 import product from './controller/productController.js'
+import coupon from './controller/coupounCode.js'
 import cors from 'cors'
 
 const app = express();
@@ -25,7 +26,8 @@ app.use("/upload", express.static("upload"));
 app.use("/user", user);  // <-- Mount your user routes under /api
 app.use("/shop", shop);  // <-- Mount your Shop routes under /api
 app.use("/product", product);  // <-- Mount your Product routes under /api
-app.use("/event", event);  // <-- Mount your Product routes under /api
+app.use("/event", event);  // <-- Mount your Event routes under /api
+app.use("/coupon", coupon);  // <-- Mount your Coupon routes under /api
 
 
 // Error handler middleware

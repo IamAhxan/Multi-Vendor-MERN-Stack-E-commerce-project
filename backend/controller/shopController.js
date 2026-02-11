@@ -343,7 +343,7 @@ router.get("/getseller", isSeller, catchAsyncErrors(async (req, res, next) => {
         if (!seller) {
             return next(new ErrorHandler("Seller does not exist", 400))
         }
-        console.log(seller)
+        // console.log(seller)
         res.status(200).json({
             success: true,
             seller
