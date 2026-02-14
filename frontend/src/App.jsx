@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { LoginPage, SignupPage, ActivationPage, HomePage, ProductsPage, BestSellingPage, EventsPage, FAQPage, ProductDetailsPage, ProfilePage, SellerCreatePage, SellerActivationPage, ShopLoginPage, ShopPage } from "./routes/Routes.js"
 import { ShopDashboardPage, ShopCreateProduct, ShopAllProducts, ShopCreateEvents, ShopAllEvents, ShopAllCoupouns } from "./routes/ShopRoutes.jsx"
@@ -9,10 +9,16 @@ import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import { loadSeller, loadUser } from "./redux/actions/user";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute.jsx";
 import ShopPreviewPage from "./pages/Shop/ShopPreviewPage.jsx";
+import { getAllProducts } from "./redux/actions/product.js";
+import { getAllEvents } from "./redux/actions/event.js";
 
 function App() {
-  Store.dispatch(loadUser())
-  Store.dispatch(loadSeller())
+  useEffect(() => {
+    Store.dispatch(loadUser())
+    Store.dispatch(loadSeller())
+    Store.dispatch(getAllProducts())
+    Store.dispatch(getAllEvents())
+  }, [])
 
 
   return (

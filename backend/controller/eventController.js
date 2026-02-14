@@ -40,7 +40,7 @@ router.post("/create-event", upload.array("images"), catchAsyncErrors(async (req
 
 // Get All evetns of a shop
 
-router.get("/get-all-events/:id", catchAsyncErrors(async (req, res, next) => {
+router.get("/get-all-events-shop/:id", catchAsyncErrors(async (req, res, next) => {
     try {
         const events = await Event.find({ shopId: req.params.id });
         res.status(201).json({
@@ -88,5 +88,20 @@ router.delete("/delete-shop-events/:id", isSeller, catchAsyncErrors(async (req, 
         return next(new ErrorHandler(error.message, 400))
     }
 }))
+
+
+
+router.get("/get-all-events", async (req, res, next) => {
+    try {
+        const events = await Event.find();
+        res.status(201).json({
+            success: true,
+            events,
+        })
+    } catch (error) {
+        return next(new ErrorHandler(error, 400))
+    }
+})
+
 
 export default router

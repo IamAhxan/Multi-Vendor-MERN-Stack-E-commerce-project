@@ -127,11 +127,16 @@ const Header = ({ activeHeading }) => {
                     className={`${styles.section} ${styles.normalFlex} justify-between w-[90%]`}
                 >
                     {/* Categories Dropdown Wrapper */}
-                    <div className="relative h-15 mt-2.5 w-67.5 hidden 1000px:block">
-                        <BiMenuAltLeft size={30} className="absolute top-3 left-2 z-10" />
+                    {/* Categories Dropdown Wrapper */}
+                    <div className="relative h-[60px] mt-[10px] w-[270px] hidden 1000px:block">
+                        <BiMenuAltLeft size={30} className="absolute top-3 left-2" />
                         <button
-                            onClick={() => setDropDown(!dropDown)}
-                            className="h-full w-full flex justify-between items-center pl-10 bg-white font-sans text-lg font-medium select-none rounded-t-md relative"
+                            /* Fix: Use a callback that doesn't conflict with parent clicks */
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setDropDown(!dropDown);
+                            }}
+                            className="h-full w-full flex justify-between items-center pl-10 bg-white font-sans text-lg font-[500] select-none rounded-t-md relative"
                         >
                             All Categories
                         </button>
@@ -140,12 +145,12 @@ const Header = ({ activeHeading }) => {
                             className="absolute right-2 top-4 cursor-pointer"
                             onClick={() => setDropDown(!dropDown)}
                         />
-                        {dropDown ? (
+                        {dropDown && (
                             <DropDown
                                 categoriesData={categoriesData}
                                 setDropDown={setDropDown}
                             />
-                        ) : null}
+                        )}
                     </div>
 
                     {/* Navbar Component */}

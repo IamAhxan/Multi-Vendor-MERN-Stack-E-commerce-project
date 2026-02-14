@@ -12,7 +12,7 @@ const ShopProfileData = ({ isOwner }) => {
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(getAllProductsShop(id))
-    }, [dispatch])
+    }, [dispatch, id])
     const [active, setActive] = useState(1);
     return (
         <div className="w-full">
