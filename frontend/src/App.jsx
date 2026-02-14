@@ -8,6 +8,7 @@ import Store from './redux/store.js'
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import { loadSeller, loadUser } from "./redux/actions/user";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute.jsx";
+import ShopPreviewPage from "./pages/Shop/ShopPreviewPage.jsx";
 
 function App() {
   Store.dispatch(loadUser())
@@ -43,6 +44,7 @@ function App() {
         <Route path="/dashboard-create-event" element={<SellerProtectedRoute><ShopCreateEvents /></SellerProtectedRoute>} />
         <Route path="/dashboard-events" element={<SellerProtectedRoute><ShopAllEvents /></SellerProtectedRoute>} />
         <Route path="/dashboard-coupouns" element={<SellerProtectedRoute><ShopAllCoupouns /></SellerProtectedRoute>} />
+        <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
 
       </Routes>
       <ToastContainer

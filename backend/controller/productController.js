@@ -85,6 +85,19 @@ router.delete("/delete-shop-product/:id", isSeller, catchAsyncErrors(async (req,
         return next(new ErrorHandler(error.message, 400))
     }
 }))
+// Get all products (Global)
+router.get("/get-all-products", catchAsyncErrors(async (req, res, next) => {
+    try {
+        // Find all products and sort by creation date (newest first)
+        const products = await Product.find().sort({ createdAt: -1 });
 
+        res.status(200).json({
+            success: true,
+            products,
+        });
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 400));
+    }
+}));
 
 export default router

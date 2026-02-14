@@ -43,7 +43,6 @@ router.get(
             const couponCodes = await CoupounCode.find({
                 "shop._id": req.params.id,
             });
-            console.log(couponCodes)
 
             res.status(201).json({
                 success: true,

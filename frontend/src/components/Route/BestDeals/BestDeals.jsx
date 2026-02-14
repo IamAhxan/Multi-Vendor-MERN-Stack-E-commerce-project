@@ -2,15 +2,22 @@ import React, { useEffect, useState } from 'react'
 import { productData } from '../../../static/data'
 import styles from '../../../styles/styles'
 import ProductCard from '../ProductCard/ProductCard.jsx'
+import { useSelector } from 'react-redux'
+import Loader from '../../Layout/Loader.jsx'
 
 const BestDeals = () => {
     const [data, setData] = useState([])
+    const { allProducts, isLoading } = useSelector((state) => state.products);
+
 
     useEffect(() => {
-        const d = productData && productData.sort((a, b) => b.total_sell - a.total_sell)
-        const firstFive = d.slice(0, 5);
-        setData(firstFive)
-    }, [])
+        // Only run logic if products exists and is an array
+        if (allProducts && Array.isArray(allProducts)) {
+            const firstFive = allProducts.slice(0, 5);
+            setData(firstFive);
+        }
+    }, [allProducts]);
+    if (isLoading) return <div><Loader /></div>;
 
     return (
         <div>
@@ -19,11 +26,12 @@ const BestDeals = () => {
                     <h1>Best Deals</h1>
                 </div>
                 <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 gap-[30px] xl:grid-cols-5 xl:gap-[30px] mb-12 border-0">
-                    {
-                        data && data.map((i, index) => (
-                            <ProductCard data={i} key={index} />
-                        ))
-                    }
+                    {/* ... your existing JSX ... */}
+                    {data && data.length > 0 ? (
+                        data.map((i, index) => <ProductCard data={i} key={index} />)
+                    ) : (
+                        <p>No products found. Check if your API is returning data!</p>
+                    )}
                 </div>
             </div>
         </div>

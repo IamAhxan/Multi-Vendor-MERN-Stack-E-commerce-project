@@ -374,4 +374,22 @@ router.get("/logout", isAuthenticated, catchAsyncErrors(async (req, res, next) =
     }
 }))
 
+//  Get shop Info
+
+router.get("/get-shop-info/:id", catchAsyncErrors(async (req, res, next) => {
+    try {
+        const shop = await Shop.findById(req.params.id);
+        if (!shop) {
+            return next(new ErrorHandler("Shop not found with this id!!", 404))
+        }
+        res.status(201).json({
+            success: true,
+            shop,
+        })
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 400))
+    }
+}))
+
 export default router;

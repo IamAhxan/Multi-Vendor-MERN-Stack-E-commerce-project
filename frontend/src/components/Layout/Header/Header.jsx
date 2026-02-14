@@ -19,7 +19,9 @@ import Wishlist from "../wishlist/Wishlist.jsx";
 import { RxCross1 } from "react-icons/rx";
 
 const Header = ({ activeHeading }) => {
-    const { isAuthenticated, user, loading } = useSelector((state) => state.user);
+    const { isAuthenticated, user } = useSelector((state) => state.user);
+    const { allProducts } = useSelector((state) => state.products);
+
     const [searchTerm, setSearchTerm] = useState("");
     const [searchData, setSearchData] = useState(null);
     const [active, setActive] = useState(false);
@@ -50,8 +52,8 @@ const Header = ({ activeHeading }) => {
             setSearchData(null);
         } else {
             const filteredProduct =
-                productData &&
-                productData.filter((product) => {
+                allProducts &&
+                allProducts.filter((product) => {
                     return product.name.toLowerCase().includes(term.toLowerCase());
                 });
             setSearchData(filteredProduct);
@@ -93,7 +95,7 @@ const Header = ({ activeHeading }) => {
                                         <Link to={`/product/${product_name}`} key={index}>
                                             <div className="w-full flex items-center py-3 hover:bg-gray-100 transition">
                                                 <img
-                                                    src={i.image_Url[0].url}
+                                                    src={`${backend_url}upload/${i.images[0]}`}
                                                     alt=""
                                                     className="w-10 h-10 mr-2.5"
                                                 />
@@ -277,7 +279,7 @@ const Header = ({ activeHeading }) => {
                                                 <Link to={`/product/${product_name}`} key={index}>
                                                     <div className="w-full flex items-center py-3 hover:bg-gray-100 transition">
                                                         <img
-                                                            src={i.image_Url[0].url}
+                                                            src={`${backend_url}upload/${i.images[0]}`}
                                                             alt=""
                                                             className="w-10 h-10 mr-2.5"
                                                         />

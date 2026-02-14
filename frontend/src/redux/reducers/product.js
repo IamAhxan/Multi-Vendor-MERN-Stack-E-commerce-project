@@ -2,6 +2,8 @@ import { createReducer } from '@reduxjs/toolkit'
 
 const initialState = {
     isLoading: true,
+    products: [],
+    allProducts: [],
 }
 
 export const productReducer = createReducer(initialState, (builder) => {
@@ -11,7 +13,7 @@ export const productReducer = createReducer(initialState, (builder) => {
         })
         .addCase('productCreateSuccess', (state, action) => {
             state.isLoading = false;
-            state.product = action.payload;
+            state.products = action.payload;
             state.success = true;
         })
         .addCase('productCreateFail', (state, action) => {
@@ -24,6 +26,7 @@ export const productReducer = createReducer(initialState, (builder) => {
         })
         .addCase('getAllProductsShopSuccess', (state, action) => {
             state.isLoading = false;
+            // CHANGE THIS: Keep shop-specific products here
             state.products = action.payload;
         })
         .addCase('getAllProductsShopFailed', (state, action) => {
@@ -43,5 +46,18 @@ export const productReducer = createReducer(initialState, (builder) => {
         })
         .addCase('clearErrors', (state) => {
             state.error = null;
-        });
+        })
+        .addCase('getAllProductsRequest', (state) => {
+            state.isLoading = true;
+        })
+        .addCase('getAllProductsSuccess', (state, action) => {
+            state.isLoading = false;
+            // CHANGE THIS: Keep global products here for Best Deals/Featured
+            state.allProducts = action.payload;
+        })
+        .addCase('getAllProductsFailed', (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        })
+
 });
