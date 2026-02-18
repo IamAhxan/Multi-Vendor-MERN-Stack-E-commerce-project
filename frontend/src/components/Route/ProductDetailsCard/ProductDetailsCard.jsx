@@ -2,11 +2,17 @@ import React, { useState } from 'react'
 import { RxCross1 } from 'react-icons/rx'
 import styles from '../../../styles/styles'
 import { AiFillHeart, AiOutlineHeart, AiOutlineMessage, AiOutlineShoppingCart } from 'react-icons/ai'
+import { useDispatch, useSelector } from "react-redux"
+import { toast } from "react-toastify"
+import { addToCart } from '../../../redux/actions/cart'
 
 const ProductDetailsCard = ({ setOpen, data }) => {
+    const { cart } = useSelector((state) => state.cart)
     const [count, setCount] = useState(1)
     const [click, setClick] = useState(false)
     const [select, setSelect] = useState(false)
+
+    const dispatch = useDispatch()
 
     const handleMessageSubmit = () => {
 
@@ -19,6 +25,20 @@ const ProductDetailsCard = ({ setOpen, data }) => {
     const incrementCount = () => {
         setCount(count + 1)
 
+    }
+    const addToCartHandler = () => {
+        const isItemExists = cart && cart.find((i) => i._id === id);
+        if (isItemExists) {
+            toNamespacedPath.error("Item already in cart!")
+        } else {
+            if (data.stock < count) {
+                toast.error("Product Stock Limited!")
+            } else {
+                const cartData = { ...data, qty: count }
+                dispatch(addToCart(cartData))
+                toast.success("Item added to cart successfully!")
+            }
+        }
     }
 
     return (
@@ -92,7 +112,8 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                                             )}
                                         </div>
                                     </div>
-                                    <div className={`${styles.button} mt-6 !rounded-[4px] h-11 flex items-center`}>
+                                    <div className={`${styles.button} mt-6 !rounded-[4px] h-11 flex items-center`}
+                                        onClick={() => addToCartHandler(data._id)}>
                                         <span className="text-white flex items-center">
                                             Add to Cart <AiOutlineShoppingCart className='ml-1' />
                                         </span>

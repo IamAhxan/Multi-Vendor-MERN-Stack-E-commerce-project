@@ -21,7 +21,7 @@ import { RxCross1 } from "react-icons/rx";
 const Header = ({ activeHeading }) => {
     const { isAuthenticated, user } = useSelector((state) => state.user);
     const { allProducts } = useSelector((state) => state.products);
-
+    const { cart } = useSelector((state) => state.cart);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchData, setSearchData] = useState(null);
     const [active, setActive] = useState(false);
@@ -180,7 +180,7 @@ const Header = ({ activeHeading }) => {
                                     color="rgb(255 255 255 /83%)"
                                 />
                                 <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
-                                    1
+                                    {cart && cart.length}
                                 </span>
                             </div>
                         </div>
@@ -241,7 +241,7 @@ const Header = ({ activeHeading }) => {
                         >
                             <AiOutlineShoppingCart size={35} className="" />
                             <span className="absolute -right-1 -top-1 rounded-full bg-[#3bc177] w-5 h-5 flex items-center justify-center text-white text-[12px]">
-                                1
+                                {cart && cart.length}
                             </span>
                         </div>
                     </div>

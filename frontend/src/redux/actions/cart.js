@@ -1,0 +1,22 @@
+// Add to cart
+
+
+export const addToCart = (data) => async (dispatch, getState) => {
+    dispatch({
+        type: "addToCart",
+        payload: data,
+    });
+    localStorage.setItem("cartItem", JSON.stringify(getState().cart.cart));
+    return data;
+};
+
+// Remove From Cart
+
+export const removeFromCart = (data) => async (dispatch, getState) => {
+    dispatch({
+        type: "removeFromCart",
+        payload: data._id,
+    });
+    localStorage.setItem("cartItems", JSON.stringify(getState().cart.cart));
+    return data
+}
