@@ -20,6 +20,7 @@ import { RxCross1 } from "react-icons/rx";
 
 const Header = ({ activeHeading }) => {
     const { isAuthenticated, user } = useSelector((state) => state.user);
+    const { wishlist } = useSelector((state) => state.wishlist);
     const { allProducts } = useSelector((state) => state.products);
     const { cart } = useSelector((state) => state.cart);
     const [searchTerm, setSearchTerm] = useState("");
@@ -166,7 +167,7 @@ const Header = ({ activeHeading }) => {
                             >
                                 <AiOutlineHeart size={30} color="rgb(255 255 255 /83%)" />
                                 <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
-                                    0
+                                    {wishlist && wishlist.length}
                                 </span>
                             </div>
                         </div>
@@ -296,7 +297,6 @@ const Header = ({ activeHeading }) => {
                                     </div>
                                 ) : null}
                             </div>
-
                             <Navbar active={activeHeading} />
                             <div className={`${styles.button} ml-4 !rounded-[4px]`}>
                                 <Link to="/seller">
@@ -304,43 +304,46 @@ const Header = ({ activeHeading }) => {
                                         Become a Seller <IoIosArrowForward className="ml-1" />
                                     </h1>
                                 </Link>
-
-                            </div> <br />
+                            </div>{" "}
+                            <br />
                             <br />
                             <br />
                             <div className="flex">
                                 {
                                     <div className="flex justify-center w-full">
-                                        {
-                                            !isAuthenticated ? (
-                                                <>
-                                                    <Link to="/login" className="text-[18px] pr-[10px] text-[#000000b7]">
-                                                        Login /
-                                                    </Link>
-                                                    <Link to="/sign-up" className="text-[18px] text-[#000000b7]">
-                                                        SignUp
-                                                    </Link>
-                                                </>
-                                            ) : (
-                                                <div className="">
-                                                    <Link to="/profile">
-                                                        <img
-                                                            src={`${backend_url}${user?.avatar}`}
-                                                            alt=""
-                                                            className="w-[60px] h-[60px] rounded-full border-[3px] border-[#0eae88]"
-                                                        />
-                                                    </Link>
-                                                </div>
-                                            )
-                                        }
+                                        {!isAuthenticated ? (
+                                            <>
+                                                <Link
+                                                    to="/login"
+                                                    className="text-[18px] pr-[10px] text-[#000000b7]"
+                                                >
+                                                    Login /
+                                                </Link>
+                                                <Link
+                                                    to="/sign-up"
+                                                    className="text-[18px] text-[#000000b7]"
+                                                >
+                                                    SignUp
+                                                </Link>
+                                            </>
+                                        ) : (
+                                            <div className="">
+                                                <Link to="/profile">
+                                                    <img
+                                                        src={`${backend_url}${user?.avatar}`}
+                                                        alt=""
+                                                        className="w-[60px] h-[60px] rounded-full border-[3px] border-[#0eae88]"
+                                                    />
+                                                </Link>
+                                            </div>
+                                        )}
                                     </div>
                                 }
-
                             </div>
                         </div>
                     </div>
                 )}
-            </div >
+            </div>
         </>
     );
 };
