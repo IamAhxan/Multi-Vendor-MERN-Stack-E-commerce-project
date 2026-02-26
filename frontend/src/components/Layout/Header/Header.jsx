@@ -91,9 +91,8 @@ const Header = ({ activeHeading }) => {
                         {searchData && searchData.length !== 0 ? (
                             <div className="absolute min-h-[30vh] bg-white shadow-lg z-9 p-4 w-full">
                                 {searchData.map((i, index) => {
-                                    const product_name = i.name.replace(/\s+/g, "-");
                                     return (
-                                        <Link to={`/product/${product_name}`} key={index}>
+                                        <Link to={`/product/${i._id}`} key={index}>
                                             <div className="w-full flex items-center py-3 hover:bg-gray-100 transition">
                                                 <img
                                                     src={`${backend_url}upload/${i.images[0]}`}

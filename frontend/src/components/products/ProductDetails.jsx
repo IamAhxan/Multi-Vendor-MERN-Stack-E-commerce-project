@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Links, useNavigate } from "react-router-dom";
 import styles from "../../styles/styles";
 import {
@@ -8,13 +8,39 @@ import {
     AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { backend_url } from "../../server";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addToWishlist, removeFromWishlist } from "../../redux/actions/wishlis";
+import { getAllProductsShop } from "../../redux/actions/product"
+import { toast } from "react-toastify";
+import { addToCart } from "../../redux/actions/cart";
 
 const ProductDetails = ({ data }) => {
+    const { wishlist } = useSelector((state) => state.wishlist)
+    const { cart } = useSelector((state) => state.cart);
+    const { products } = useSelector((state) => state.products)
+
+
     const [count, setCount] = useState(1);
     const [click, setClick] = useState(false);
     const [select, setSelect] = useState(0);
     const navigate = useNavigate();
+    const dispatch = useDispatch()
+    // Added dispatch to dependencies
+    useEffect(() => {
+        const shopId = data?.shop?._id;
+
+        // GUARD: Only dispatch if we have a shopId AND 
+        // we haven't loaded products for this specific shop yet
+        if (shopId && (!products || products.length === 0 || products[0]?.shopId !== shopId)) {
+            dispatch(getAllProductsShop(shopId));
+        }
+
+        // Wishlist Logic
+        if (wishlist && data?._id) {
+            const isItemInWishlist = wishlist.some((i) => i._id === data._id);
+            setClick(isItemInWishlist);
+        }
+    }, [dispatch, wishlist, data?._id, data?.shop?._id]);
 
 
 
@@ -30,8 +56,31 @@ const ProductDetails = ({ data }) => {
     const handleMessageSubmit = () => {
         navigate("/inbox?conversation=507ebjaskjdhjasd");
     };
-    console.log(data)
 
+    const removeFromWishlistHandler = (data) => {
+        setClick(!click)
+        dispatch(removeFromWishlist(data))
+    }
+    const addToWishlistHandler = () => {
+        setClick(!click)
+
+        dispatch(addToWishlist(data))
+    }
+
+    const addToCartHandler = (id) => {
+        const isItemExists = cart && cart.find((i) => i._id === id);
+        if (isItemExists) {
+            toast.error("Item already in cart!");
+        } else {
+            if (data.stock < 1) {
+                toast.error("Product Stock Limited!");
+            } else {
+                const cartData = { ...data, qty: count };
+                dispatch(addToCart(cartData));
+                toast.success("Item added to cart successfully!");
+            }
+        }
+    };
     return (
         <div className="bg-white">
             {data ? (
@@ -101,7 +150,7 @@ const ProductDetails = ({ data }) => {
                                             <AiFillHeart
                                                 size={30}
                                                 className="cursor-pointer"
-                                                onClick={() => setClick(!click)}
+                                                onClick={() => removeFromWishlistHandler(data)}
                                                 color="red"
                                                 title="Remove from wishlist"
                                             />
@@ -109,7 +158,7 @@ const ProductDetails = ({ data }) => {
                                             <AiOutlineHeart
                                                 size={30}
                                                 className="cursor-pointer"
-                                                onClick={() => setClick(!click)}
+                                                onClick={() => addToWishlistHandler(data)}
                                                 color="#333"
                                                 title="Add to wishlist"
                                             />
@@ -119,6 +168,7 @@ const ProductDetails = ({ data }) => {
 
                                 <div
                                     className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}
+                                    onClick={() => addToCartHandler(data._id)}
                                 >
                                     <span className="text-white flex items-center">
                                         Add to Cart <AiOutlineShoppingCart className="ml-1" />
@@ -159,8 +209,9 @@ const ProductDetails = ({ data }) => {
                     <br />
                     <br />
                 </div>
-            ) : null}
-        </div>
+            ) : null
+            }
+        </div >
     );
 };
 

@@ -8,7 +8,7 @@ import ProductDetails from "../components/products/ProductDetails.jsx";
 import SuggestedProduct from "../components/products/SuggestedProduct.jsx";
 
 const ProductDetailsPage = () => {
-    const { name } = useParams();
+    const { id } = useParams();
     const dispatch = useDispatch();
     const { allProducts, isLoading } = useSelector((state) => state.products);
     const [data, setData] = useState(null);
@@ -19,27 +19,22 @@ const ProductDetailsPage = () => {
 
     useEffect(() => {
         if (allProducts && allProducts.length > 0) {
-            // Normalize the URL name: replace hyphens with spaces and trim
-            const productNameFromUrl = name.replace(/-/g, " ").toLowerCase().trim();
-
-            const product = allProducts.find((i) => {
-                // Normalize the Database name: remove extra spaces and trim
-                const nameFromDb = i.name.toLowerCase().trim();
-                return nameFromDb === productNameFromUrl;
-            });
+            // Use .find() to match the ID from the URL with the ID in your DB
+            // Note: If 'id' from the URL is a string and 'i._id' is also a string, use ===
+            const product = allProducts.find((i) => i._id === id);
 
             setData(product);
         }
-    }, [allProducts, name]);
+    }, [allProducts, id, data]); // Depend on 'id' instead of 'name'
 
-    // DEBUG LOGS - Check your browser console!
-    useEffect(() => {
-        if (allProducts && allProducts.length > 0) {
-            console.log("1. URL Param Name:", name);
-            console.log("2. Target Name (Normalized):", name.replace(/-/g, " ").toLowerCase().trim());
-            console.log("3. First product in DB:", allProducts[0]?.name);
-        }
-    }, [allProducts, name]);
+    // Updated Debug Logs
+    // useEffect(() => {
+    //     if (allProducts) {
+    //         console.log("Looking for ID:", id);
+    //         console.log("Total products loaded:", allProducts.length);
+    //         console.log("Match found:", allProducts.find((i) => i._id === id) ? "Yes" : "No");
+    //     }
+    // }, [allProducts, id]);
 
     return (
         <div>

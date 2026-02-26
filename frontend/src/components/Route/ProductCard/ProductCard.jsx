@@ -29,7 +29,6 @@ const ProductCard = ({ data }) => {
 
     // 2. SAFE STRING HANDLING: Ensure name exists before using .replace
     const d = data?.name || "";
-    const product_name = d.replace(/\s+/g, "-");
 
     useEffect(() => {
         if (wishlist && wishlist.find((i) => i._id === data._id)) {
@@ -71,7 +70,7 @@ const ProductCard = ({ data }) => {
                 <div className="flex justify-end"></div>
 
                 {/* 3. FIX SRC WARNING: Use null instead of "" for fallback */}
-                <Link to={`/product/${product_name}`}>
+                <Link to={`/product/${data._id}`}>
                     <img
                         src={data?.images?.length > 0 ? `${backend_url}upload/${data.images[0]}` : null}
                         alt={data?.name}
@@ -79,11 +78,11 @@ const ProductCard = ({ data }) => {
                     />
                 </Link>
 
-                <Link to="/">
+                <Link to={`/shop/preview/${data?.shop._id}`}>
                     <h5 className={`${styles.shop_name}`}>{data?.shop?.name}</h5>
                 </Link>
 
-                <Link to={`/product/${product_name}`}>
+                <Link to={`/product/${data._id}`}>
                     <h4 className='pb-3 font-[500]'>
                         {data?.name?.length > 40 ? data.name.slice(0, 40) + "..." : data?.name}
                     </h4>
@@ -149,7 +148,7 @@ const ProductCard = ({ data }) => {
                         <ProductDetailsCard setOpen={setOpen} data={data} />
                     ) : null}
                 </div>
-            </div>
+            </div >
         </>
     );
 };
