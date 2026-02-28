@@ -9,6 +9,10 @@ import { upload } from "../multer.js";
 import catchAsyncErrors from "../middleware/catchAsyncError.js";
 import sendToken from "../utils/jwtToken.js";
 import sendMail from "../utils/sendMail.js";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
@@ -213,4 +217,71 @@ router.get("/logout", isAuthenticated, catchAsyncErrors(async (req, res, next) =
     }
 }))
 
+
+// Update User
+
+router.put("/update-user-info", isAuthenticated, catchAsyncErrors(async (req, res, next) => {
+    try {
+        const { email, password, phoneNumber, name } = req.body;
+        const user = await User.findOne({ email }).select("+password");
+        if (!user) {
+            return next(new ErrorHandler("User not found", 404))
+        }
+
+        const isPasswordValid = await user.comparePassword(password)
+        if (!isPasswordValid) {
+            return next(new ErrorHandler("Please provide correct information", 400))
+        }
+
+        user.name = name;
+        user.email = email;
+        user.phoneNumber = phoneNumber;
+        await user.save();
+
+        res.status(201).json({
+            success: true,
+            user
+        })
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500))
+    }
+}))
+
+// update user avatar
+router.put("/update-avatar", isAuthenticated, upload.single("image"), catchAsyncErrors(async (req, res, next) => {
+    try {
+        const existsUser = await User.findById(req.user.id);
+
+        // Safely handle the old avatar deletion
+        if (existsUser.avatar) {
+            // Note: Adjust "../../uploads" based on your actual folder structure relative to this file
+            const existAvatarPath = path.join(__dirname, "../../upload", existsUser.avatar);
+            console.log("Full path to delete:", existAvatarPath); // Check your terminal for this!
+
+            if (fs.existsSync(existAvatarPath)) {
+                fs.unlinkSync(existAvatarPath);
+            } else {
+                console.log("File not found at this path, skipping deletion.");
+            }
+        }
+
+        const fileUrl = req.file.filename;
+
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { avatar: fileUrl },
+            { new: true }
+        );
+
+        res.status(200).json({
+            success: true,
+            user
+        });
+    } catch (error) {
+        // Now that __dirname is defined, this catch block shouldn't trigger 
+        // unless there's a different issue.
+        return next(new ErrorHandler(error.message, 500));
+    }
+}));
 export default router;

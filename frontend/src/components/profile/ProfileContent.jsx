@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { backend_url } from "../../server";
+import { backend_url, server } from "../../server";
 import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineArrowRight, AiOutlineCamera, AiOutlineDelete } from "react-icons/ai";
 import styles from "../../styles/styles.js";
@@ -7,24 +7,55 @@ import { DataGrid } from "@mui/x-data-grid"
 import { Button } from "@mui/material"
 import { Link } from 'react-router-dom'
 import { MdOutlineTrackChanges } from "react-icons/md"
+import { updateUserInformation } from "../../redux/actions/user.js";
+import Loader from "../Layout/Loader.jsx";
+import { toast } from "react-toastify"
+import axios from "axios";
 
 const ProfileContent = ({ active }) => {
-    const { user, loading } = useSelector((state) => state.user);
+    const { user, loading, error } = useSelector((state) => state.user);
     const [name, setName] = useState(user?.name);
     const [email, setEmail] = useState(user?.email);
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [zipCode, setZipCode] = useState('');
-    const [address1, setAddress1] = useState("");
-    const [address2, setAddress2] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
+    const [password, setPassword] = useState("")
+    const [avatar, setAvatar] = useState(null)
+    const dispatch = useDispatch()
 
     if (loading) {
-        return <div>Loading...</div>; // Or a spinner
+        return <div><Loader /></div>; // Or a spinner
     }
-
-
+    useEffect(() => {
+        if (user) {
+            setName(user.name);
+            setEmail(user.email);
+            setPhoneNumber(user.phoneNumber);
+        }
+    }, [user]);
+    useEffect(() => {
+        if (error) {
+            toast.error(error)
+        }
+    }, [error])
     const handleSubmit = (e) => {
         e.preventDefault();
+        dispatch(updateUserInformation(email, password, phoneNumber, name))
 
+    }
+    const handleImage = async (e) => {
+        const file = e.target.files[0];
+        setAvatar(file)
+        const formData = new FormData();
+        formData.append("image", e.target.files[0])
+        await axios.put(`${server}/user/update-avatar`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            },
+            withCredentials: true,
+        }).then((response) => {
+            window.location.reload()
+        }).catch((error) => {
+            toast.error(error);
+        })
     }
 
     return (
@@ -35,12 +66,14 @@ const ProfileContent = ({ active }) => {
                     <div className="flex justify-center w-full">
                         <div className="relative">
                             <img
-                                src={`${backend_url}${user?.avatar}`}
+                                src={`${backend_url}upload/${user?.avatar}`}
                                 className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
                                 alt="user"
                             />
                             <div className="w-[30px] bg-[#e3e9ee] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
-                                <AiOutlineCamera />
+                                <input type="file" id="image" className="hidden" onChange={handleImage} />
+                                <label htmlFor="image"> <AiOutlineCamera /></label>
+
                             </div>
                         </div>
                     </div>
@@ -87,44 +120,17 @@ const ProfileContent = ({ active }) => {
                                 </div>
                                 <div className="w-[100%] 800px:w-[50%]">
                                     <label htmlFor="" className="block pb-2">
-                                        Zip Code
+                                        Enter Your Password
                                     </label>
                                     <input
-                                        type="number"
+                                        type="password"
                                         className={`${styles.input} !w-[95%] bg-white mb-4 800px:mb-0`}
                                         required
-                                        value={zipCode}
-                                        onChange={(e) => setZipCode(e.target.value)}
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                     />
                                 </div>
-                            </div>
-                            <div className="w-full 800px:flex 800px:flex-wrap block pb-3">
 
-
-                                <div className="w-[100%] 800px:w-[50%]">
-                                    <label htmlFor="" className="block pb-2">
-                                        Address line 1
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className={`${styles.input} !w-[95%] bg-white mb-4 800px:mb-0`}
-                                        required
-                                        value={address1}
-                                        onChange={(e) => setAddress1(e.target.value)}
-                                    />
-                                </div>
-                                <div className="w-[100%] 800px:w-[50%]">
-                                    <label htmlFor="" className="block pb-2">
-                                        Address line 2
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className={`${styles.input} !w-[95%] bg-white mb-4 800px:mb-0`}
-                                        required
-                                        value={address2}
-                                        onChange={(e) => setAddress2(e.target.value)}
-                                    />
-                                </div>
                             </div>
                             <input type="submit" value="update" required className={`w-[250px] h-[40px] border border-[#3a24db] text-center text-[#3a23db] rounded-[3px] mt-8 cursor-pointer`} />
                         </form>
