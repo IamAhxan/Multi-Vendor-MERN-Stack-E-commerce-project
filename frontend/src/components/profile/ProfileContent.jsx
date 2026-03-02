@@ -11,7 +11,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { MdOutlineTrackChanges } from "react-icons/md";
-import { updateUserInformation } from "../../redux/actions/user.js";
+import { updateUserAddress, updateUserInformation } from "../../redux/actions/user.js";
 import Loader from "../Layout/Loader.jsx";
 import { toast } from "react-toastify";
 import { RxCross1 } from "react-icons/rx";
@@ -27,13 +27,7 @@ const ProfileContent = ({ active }) => {
     const [avatar, setAvatar] = useState(null);
     const dispatch = useDispatch();
 
-    if (loading) {
-        return (
-            <div>
-                <Loader />
-            </div>
-        ); // Or a spinner
-    }
+
     useEffect(() => {
         if (user) {
             setName(user.name);
@@ -46,10 +40,27 @@ const ProfileContent = ({ active }) => {
             toast.error(error);
         }
     }, [error]);
+
+
+    if (loading) {
+        return (
+            <div>
+                <Loader />
+            </div>
+        ); // Or a spinner
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (password === "") {
+            toast.error("Please enter your password to confirm changes!");
+            return;
+        }
         dispatch(updateUserInformation(email, password, phoneNumber, name));
     };
+
+
+
     const handleImage = async (e) => {
         const file = e.target.files[0];
         setAvatar(file);
@@ -503,6 +514,7 @@ const Address = () => {
     const [address2, setAddress2] = useState("");
     const [addressType, setAddressType] = useState("");
     const { user } = useSelector((state) => state.user);
+    const dispatch = useDispatch()
 
     const addressTypeData = [
         {
@@ -516,13 +528,18 @@ const Address = () => {
         },
     ];
 
-    const handleSubmit = async (e) => {
+    const handleAddressUpdate = async (e) => {
         e.preventDefault();
 
         if (addressType === "" || country === "" || city === "") {
             toast.error("Please fill all the fields");
         } else {
             //
+            dispatch(updateUserAddress(country,
+                city,
+                address1,
+                address2,
+                addressType))
         }
     };
 
@@ -542,7 +559,7 @@ const Address = () => {
                             Add New Address
                         </h1>
                         <div className="w-full">
-                            <form aria-required onSubmit={handleSubmit} className="w-full">
+                            <form aria-required onSubmit={handleAddressUpdate} className="w-full">
                                 <div className="w-full block p-4">
                                     <div className="w-full pb-2">
                                         <label htmlFor="" className="block pb-2">

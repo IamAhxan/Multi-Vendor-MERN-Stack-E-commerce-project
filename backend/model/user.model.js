@@ -72,10 +72,14 @@ const userSchema = new mongoose.Schema({
 
 //  Hash password
 userSchema.pre("save", async function (next) {
+    // If the password field has NOT been changed, skip hashing
     if (!this.isModified("password")) {
+        return;
     }
 
-    this.password = await bcrypt.hash(this.password, 10);
+    // Only run this if password was actually changed or is new
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
 });
 
 // jwt token
