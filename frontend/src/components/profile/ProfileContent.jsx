@@ -11,7 +11,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { MdOutlineTrackChanges } from "react-icons/md";
-import { updateUserAddress, updateUserInformation } from "../../redux/actions/user.js";
+import { deleteUserAddress, updateUserAddress, updateUserInformation } from "../../redux/actions/user.js";
 import Loader from "../Layout/Loader.jsx";
 import { toast } from "react-toastify";
 import { RxCross1 } from "react-icons/rx";
@@ -19,7 +19,7 @@ import { Country, State, City } from "country-state-city";
 import axios from "axios";
 
 const ProfileContent = ({ active }) => {
-    const { user, loading, error } = useSelector((state) => state.user);
+    const { user, loading, error, successMessage } = useSelector((state) => state.user);
     const [name, setName] = useState(user?.name);
     const [email, setEmail] = useState(user?.email);
     const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
@@ -34,12 +34,17 @@ const ProfileContent = ({ active }) => {
             setEmail(user.email);
             setPhoneNumber(user.phoneNumber);
         }
+
     }, [user]);
     useEffect(() => {
         if (error) {
             toast.error(error);
+            dispatch({ type: "clearError" });
         }
-    }, [error]);
+        if (successMessage) {
+            toast.success(successMessage)
+        }
+    }, [error, successMessage]);
 
 
     if (loading) {
@@ -540,8 +545,19 @@ const Address = () => {
                 address1,
                 address2,
                 addressType))
+            setOpen(false)
+            setCountry("")
+            setCity("")
+            setAddress1("")
+            setAddress2("")
+            setZipCode("")
+            setAddressType("")
         }
     };
+
+    const handleDelete = (item) => {
+        dispatch(deleteUserAddress(item._id))
+    }
 
     return (
         <div className="w-full px-5">
@@ -706,20 +722,29 @@ const Address = () => {
                 </div>
             </div>
             <br />
-            <div className="w-full bg-white h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10">
-                <div className="flex items-center">
-                    <h5 className="pl-5 font-[600]">Default Address</h5>
-                </div>
-                <div className="pl-8 flex items-center">
-                    <h6>Adress</h6>
-                </div>
-                <div className="pl-8 flex items-center">
-                    <h6>0300000000</h6>
-                </div>
-                <div className="min-w-[10%] flex items-center justify-between pl-8">
-                    <AiOutlineDelete size={25} className="cursor-pointer" />
-                </div>
-            </div>
+            {
+                user && user.addresses.map((item, index) => (
+                    <div className="w-full bg-white h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10" key={index}>
+                        <div className="flex items-center">
+                            <h5 className="pl-5 font-[600]">{item.addressType}</h5>
+                        </div>
+                        <div className="pl-8 flex items-center">
+                            <h6>{item.address1} {item.address2}</h6>
+                        </div>
+                        <div className="pl-8 flex items-center">
+                            <h6>{user && user.phoneNumber}</h6>
+                        </div>
+                        <div className="min-w-[10%] flex items-center justify-between pl-8">
+                            <AiOutlineDelete size={25} className="cursor-pointer" onClick={() => handleDelete(item)} />
+                        </div>
+                    </div>
+                ))
+            }
+            {
+                user && user.addresses.length === 0 && (
+                    <h5 className="text-center pt-8 text-[18px]">You do not have any address!</h5>
+                )
+            }
         </div>
     );
 };
