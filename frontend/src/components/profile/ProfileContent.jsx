@@ -11,7 +11,11 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { MdOutlineTrackChanges } from "react-icons/md";
-import { deleteUserAddress, updateUserAddress, updateUserInformation } from "../../redux/actions/user.js";
+import {
+    deleteUserAddress,
+    updateUserAddress,
+    updateUserInformation,
+} from "../../redux/actions/user.js";
 import Loader from "../Layout/Loader.jsx";
 import { toast } from "react-toastify";
 import { RxCross1 } from "react-icons/rx";
@@ -19,7 +23,9 @@ import { Country, State, City } from "country-state-city";
 import axios from "axios";
 
 const ProfileContent = ({ active }) => {
-    const { user, loading, error, successMessage } = useSelector((state) => state.user);
+    const { user, loading, error, successMessage } = useSelector(
+        (state) => state.user,
+    );
     const [name, setName] = useState(user?.name);
     const [email, setEmail] = useState(user?.email);
     const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
@@ -27,14 +33,12 @@ const ProfileContent = ({ active }) => {
     const [avatar, setAvatar] = useState(null);
     const dispatch = useDispatch();
 
-
     useEffect(() => {
         if (user) {
             setName(user.name);
             setEmail(user.email);
             setPhoneNumber(user.phoneNumber);
         }
-
     }, [user]);
     useEffect(() => {
         if (error) {
@@ -42,10 +46,9 @@ const ProfileContent = ({ active }) => {
             dispatch({ type: "clearError" });
         }
         if (successMessage) {
-            toast.success(successMessage)
+            toast.success(successMessage);
         }
     }, [error, successMessage]);
-
 
     if (loading) {
         return (
@@ -63,8 +66,6 @@ const ProfileContent = ({ active }) => {
         }
         dispatch(updateUserInformation(email, password, phoneNumber, name));
     };
-
-
 
     const handleImage = async (e) => {
         const file = e.target.files[0];
@@ -198,10 +199,10 @@ const ProfileContent = ({ active }) => {
                 </div>
             )}
 
-            {/* Payment Methods Page*/}
+            {/* ChangePassword Page*/}
             {active === 6 && (
                 <div className="">
-                    <PaymentMethods />
+                    <ChangePassword />
                 </div>
             )}
 
@@ -478,33 +479,75 @@ const TrackOrder = () => {
     );
 };
 
-const PaymentMethods = () => {
+const ChangePassword = () => {
+    const [oldPassword, setOldPassword] = useState("")
+    const [newPassword, setNewPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
+    const passwordChangeHandler = async (e) => {
+        // Implement password change logic here
+        e.preventDefault()
+        await axios.put(`${server}/user/update-user-password`, { oldPassword, newPassword, confirmPassword }, { withCredentials: true })
+            .then((res) => {
+                toast.success(res.data.message)
+                setOldPassword("")
+                setNewPassword("")
+                setConfirmPassword("")
+            })
+            .catch((error) => {
+                toast.error(error.response.data.message)
+            })
+    }
     return (
         <div className="w-full px-5">
-            <div className="flex w-full items-center justify-between">
-                <h1 className="text-[25px] font-[600] text-[#000000ba] pb-2">
-                    Payment Methods
-                </h1>
-                <div className={`${styles.button} !rounded-md`}>
-                    <span className="text-white">Add New</span>
-                </div>
-            </div>
-            <br />
-            <div className="w-full bg-white h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10">
-                <div className="flex items-center">
-                    <img
-                        src="https://bonik-react.vercel.app/assets/images/payment-methods/visa.png"
-                        alt=""
-                    />
-                    <h5 className="pl-5 font-[600]">Ahsan</h5>
-                </div>
-                <div className="pl-8 flex items-center">
-                    <h6>1234 **** **** 1234</h6>
-                    <h5 className="pl-6">08/2030</h5>
-                </div>
-                <div className="min-w-[10%] flex items-center justify-between pl-8">
-                    <AiOutlineDelete size={25} className="cursor-pointer" />
-                </div>
+            <h1 className="block text-[25px] text-center font-[600] text-[#000000ba] pb-2">
+                Change Password
+            </h1>
+            <div className="">
+                <form aria-required onSubmit={passwordChangeHandler} className="flex flex-col items-center">
+                    <div className="w-[100%] 800px:w-[50%] mt-5">
+                        <label htmlFor="" className="block pb-2">
+                            Enter Your old Password
+                        </label>
+                        <input
+                            type="password"
+                            className={`${styles.input} !w-[95%] bg-white mb-4 800px:mb-0`}
+                            required
+                            value={oldPassword}
+                            onChange={(e) => setOldPassword(e.target.value)}
+                        />
+                    </div>
+                    <div className="w-[100%] 800px:w-[50%] mt-5">
+                        <label htmlFor="" className="block pb-2">
+                            Enter Your new Password
+                        </label>
+                        <input
+                            type="password"
+                            className={`${styles.input} !w-[95%] bg-white mb-4 800px:mb-0`}
+                            required
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                    </div>
+                    <div className="w-[100%] 800px:w-[50%] mt-2">
+                        <label htmlFor="" className="block pb-2">
+                            Confirm Password
+                        </label>
+                        <input
+                            type="password"
+                            className={`${styles.input} !w-[95%] bg-white mb-4 800px:mb-0`}
+                            required
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                        <input
+                            type="submit"
+                            value="update"
+                            required
+                            className={`w-[95%] h-[40px] border border-[#3a24db] text-center text-[#3a23db] rounded-[3px] mt-8 cursor-pointer`}
+                        />
+                    </div>
+
+                </form>
             </div>
         </div>
     );
@@ -519,7 +562,7 @@ const Address = () => {
     const [address2, setAddress2] = useState("");
     const [addressType, setAddressType] = useState("");
     const { user } = useSelector((state) => state.user);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const addressTypeData = [
         {
@@ -540,24 +583,22 @@ const Address = () => {
             toast.error("Please fill all the fields");
         } else {
             //
-            dispatch(updateUserAddress(country,
-                city,
-                address1,
-                address2,
-                addressType))
-            setOpen(false)
-            setCountry("")
-            setCity("")
-            setAddress1("")
-            setAddress2("")
-            setZipCode("")
-            setAddressType("")
+            dispatch(
+                updateUserAddress(country, city, address1, address2, addressType),
+            );
+            setOpen(false);
+            setCountry("");
+            setCity("");
+            setAddress1("");
+            setAddress2("");
+            setZipCode("");
+            setAddressType("");
         }
     };
 
     const handleDelete = (item) => {
-        dispatch(deleteUserAddress(item._id))
-    }
+        dispatch(deleteUserAddress(item._id));
+    };
 
     return (
         <div className="w-full px-5">
@@ -575,7 +616,11 @@ const Address = () => {
                             Add New Address
                         </h1>
                         <div className="w-full">
-                            <form aria-required onSubmit={handleAddressUpdate} className="w-full">
+                            <form
+                                aria-required
+                                onSubmit={handleAddressUpdate}
+                                className="w-full"
+                            >
                                 <div className="w-full block p-4">
                                     <div className="w-full pb-2">
                                         <label htmlFor="" className="block pb-2">
@@ -722,29 +767,37 @@ const Address = () => {
                 </div>
             </div>
             <br />
-            {
-                user && user.addresses.map((item, index) => (
-                    <div className="w-full bg-white h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10" key={index}>
+            {user &&
+                user.addresses.map((item, index) => (
+                    <div
+                        className="w-full bg-white h-[70px] rounded-[4px] flex items-center px-3 shadow justify-between pr-10"
+                        key={index}
+                    >
                         <div className="flex items-center">
                             <h5 className="pl-5 font-[600]">{item.addressType}</h5>
                         </div>
                         <div className="pl-8 flex items-center">
-                            <h6>{item.address1} {item.address2}</h6>
+                            <h6>
+                                {item.address1} {item.address2}
+                            </h6>
                         </div>
                         <div className="pl-8 flex items-center">
                             <h6>{user && user.phoneNumber}</h6>
                         </div>
                         <div className="min-w-[10%] flex items-center justify-between pl-8">
-                            <AiOutlineDelete size={25} className="cursor-pointer" onClick={() => handleDelete(item)} />
+                            <AiOutlineDelete
+                                size={25}
+                                className="cursor-pointer"
+                                onClick={() => handleDelete(item)}
+                            />
                         </div>
                     </div>
-                ))
-            }
-            {
-                user && user.addresses.length === 0 && (
-                    <h5 className="text-center pt-8 text-[18px]">You do not have any address!</h5>
-                )
-            }
+                ))}
+            {user && user.addresses.length === 0 && (
+                <h5 className="text-center pt-8 text-[18px]">
+                    You do not have any address!
+                </h5>
+            )}
         </div>
     );
 };
