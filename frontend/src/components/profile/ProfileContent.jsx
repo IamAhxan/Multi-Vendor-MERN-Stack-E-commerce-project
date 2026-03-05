@@ -584,7 +584,7 @@ const Address = () => {
         } else {
             //
             dispatch(
-                updateUserAddress(country, city, address1, address2, addressType),
+                updateUserAddress(country, city, address1, address2, Number(zipCode), addressType),
             );
             setOpen(false);
             setCountry("");

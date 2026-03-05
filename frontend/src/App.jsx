@@ -1,8 +1,8 @@
 import React, { useEffect } from "react"
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { LoginPage, SignupPage, ActivationPage, HomePage, ProductsPage, BestSellingPage, EventsPage, FAQPage, ProductDetailsPage, ProfilePage, SellerCreatePage, SellerActivationPage, ShopLoginPage, ShopPage } from "./routes/Routes.js"
+import { LoginPage, SignupPage, ActivationPage, HomePage, ProductsPage, BestSellingPage, EventsPage, FAQPage, ProductDetailsPage, ProfilePage, SellerCreatePage, SellerActivationPage, ShopLoginPage, ShopPage, CheckoutPage } from "./routes/Routes.js"
 import { ShopDashboardPage, ShopCreateProduct, ShopAllProducts, ShopCreateEvents, ShopAllEvents, ShopAllCoupouns } from "./routes/ShopRoutes.jsx"
-import { ToastContainer, Bounce, toast } from 'react-toastify'
+import { ToastContainer, Bounce } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import Store from './redux/store.js'
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
@@ -37,9 +37,11 @@ function App() {
         <Route path="/profile" element={<ProtectedRoute>
           <ProfilePage />
         </ProtectedRoute>} />
-        <Route path="/checkout" element={<ProtectedRoute>
-          {/* <CheckoutPage /> */}
-        </ProtectedRoute>} />
+        <Route path="/checkout" element={
+          // <ProtectedRoute>
+          <CheckoutPage />
+          // </ProtectedRoute>
+        } />
         <Route path="/shop-create" element={<SellerCreatePage />} />
         <Route path="/shop-login" element={<ShopLoginPage />} />
 
