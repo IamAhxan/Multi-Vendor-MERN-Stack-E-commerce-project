@@ -4,7 +4,7 @@ import Stripe from "stripe";
 import catchAsyncErrors from "../middleware/catchAsyncError.js";
 
 router.post(
-    "/payment/process",
+    "/process",
     catchAsyncErrors(async (req, res, next) => {
         const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
         const myPayment = await stripe.paymentIntents.create({
