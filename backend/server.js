@@ -1,5 +1,10 @@
 import dotenv from "dotenv";
-dotenv.config({ path: "./backend/config/.env" });
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenv.config({ path: join(__dirname, 'config', '.env') });
 
 import app from "./App.js";
 import { connectDatabase } from "./db/Database.js";

@@ -67,11 +67,15 @@ const Checkout = () => {
         const name = couponCode;
 
         await axios.get(`${server}/coupon/get-coupon-value/${name}`).then((res) => {
-            const shopId = res.data.couponCode?.shopId;
-            const couponCodeValue = res.data.couponCode?.value;
-            if (res.data.couponCode !== null) {
-                const isCouponValid =
-                    cart && cart.filter((item) => item.shopId === shopId);
+            const couponData = res.data.couponCode;
+
+            if (couponData) {
+                // 1. Define the variable clearly
+                const shopId = couponData.shop._id;
+                const couponCodeValue = couponData.value;
+
+                // 2. Use the exact same variable name 'shopId' here
+                const isCouponValid = cart && cart.filter((item) => item.shopId === shopId);
 
                 if (isCouponValid.length === 0) {
                     toast.error("Coupon code is not valid for this shop");
@@ -83,14 +87,17 @@ const Checkout = () => {
                     );
                     const discountPrice = (eligiblePrice * couponCodeValue) / 100;
                     setDiscountPrice(discountPrice);
-                    setCouponCodeData(res.data.couponCode);
+                    setCouponCodeData(couponData);
                     setCouponCode("");
+                    toast.success("Coupon applied!");
                 }
-            }
-            if (res.data.couponCode === null) {
-                toast.error("Coupon code doesn't exists!");
+            } else {
+                // This handles if res.data.couponCode is null
+                toast.error("Coupon code doesn't exist!");
                 setCouponCode("");
             }
+        }).catch((err) => {
+            toast.error("An error occurred while fetching the coupon");
         });
     };
 

@@ -7,6 +7,7 @@ import shop from './controller/shopController.js'
 import event from './controller/eventController.js'
 import product from './controller/productController.js'
 import coupon from './controller/coupounCode.js'
+import payment from './controller/paymentController.js'
 import cors from 'cors'
 
 const app = express();
@@ -28,6 +29,7 @@ app.use("/shop", shop);  // <-- Mount your Shop routes under /api
 app.use("/product", product);  // <-- Mount your Product routes under /api
 app.use("/event", event);  // <-- Mount your Event routes under /api
 app.use("/coupon", coupon);  // <-- Mount your Coupon routes under /api
+app.use("/payment", payment);  // <-- Mount your Payment routes under /api
 
 
 // Error handler middleware
