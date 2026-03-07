@@ -4,7 +4,7 @@ import {
   LoginPage, SignupPage, ActivationPage, HomePage, ProductsPage,
   BestSellingPage, EventsPage, FAQPage, ProductDetailsPage,
   ProfilePage, SellerCreatePage, SellerActivationPage,
-  ShopLoginPage, ShopPage, CheckoutPage, PaymentPage
+  ShopLoginPage, ShopPage, CheckoutPage, PaymentPage, OrderSuccessPage
 } from "./routes/Routes.js";
 import {
   ShopDashboardPage, ShopCreateProduct, ShopAllProducts,
@@ -66,6 +66,7 @@ function App() {
           <Route path="/events" element={<EventsPage />} />
           <Route path="/faq" element={<FAQPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/order/success" element={<OrderSuccessPage />} />
 
           {/* 2. Stripe Payment Route Wrapped in Elements */}
           {stripeApiKey && (

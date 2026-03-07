@@ -1,15 +1,14 @@
 import express from "express";
 const router = express.Router();
-import Order from "../models/orderModel.js";
+import Order from "./../model/order.model.js"
 import catchAsyncErrors from "../middleware/catchAsyncError.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
-import Product from "../models/productModel.js";
+import Product from "../model/product.js";
 import { isAuthenticated } from "./../middleware/auth.js";
 
 // Create new Order
 router.post(
     "/create-order",
-    isAuthenticated,
     catchAsyncErrors(async (req, res, next) => {
         try {
             const { cart, shippingAddress, user, totalPrice, paymentInfo } = req.body;
@@ -45,3 +44,5 @@ router.post(
         }
     }),
 );
+
+export default router;

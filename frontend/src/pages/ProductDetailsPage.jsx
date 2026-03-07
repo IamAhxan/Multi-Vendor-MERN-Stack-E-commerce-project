@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllProducts } from '../redux/actions/product';
 import Header from '../components/Layout/Header/Header';
@@ -11,21 +11,37 @@ const ProductDetailsPage = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const { allProducts, isLoading } = useSelector((state) => state.products);
+    const { allEvents } = useSelector((state) => state.events);
     const [data, setData] = useState(null);
+    const [searchParams] = useSearchParams();
+    const eventData = searchParams.get("isEvent");
+
+
 
     useEffect(() => {
         dispatch(getAllProducts());
+        scrollTo(0, 0);
     }, [dispatch]);
 
     useEffect(() => {
-        if (allProducts && allProducts.length > 0) {
-            // Use .find() to match the ID from the URL with the ID in your DB
-            // Note: If 'id' from the URL is a string and 'i._id' is also a string, use ===
-            const product = allProducts.find((i) => i._id === id);
+        // if (allProducts && allProducts.length > 0) {
+        //     // Use .find() to match the ID from the URL with the ID in your DB
+        //     // Note: If 'id' from the URL is a string and 'i._id' is also a string, use ===
+        //     const product = allProducts.find((i) => i._id === id);
 
+        //     setData(product);
+        // }
+
+        if (eventData !== null) {
+            const product = allEvents.find((i) => i._id === id);
+            setData(product);
+        } else {
+            const product = allProducts.find((i) => i._id === id);
             setData(product);
         }
-    }, [allProducts, id, data]); // Depend on 'id' instead of 'name'
+
+
+    }, [allProducts, allEvents, id, data]); // Depend on 'id' instead of 'name'
 
     // Updated Debug Logs
     // useEffect(() => {
