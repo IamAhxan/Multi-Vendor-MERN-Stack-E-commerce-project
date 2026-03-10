@@ -20,6 +20,7 @@ import { RxCross1 } from "react-icons/rx";
 
 const Header = ({ activeHeading }) => {
     const { isAuthenticated, user } = useSelector((state) => state.user);
+    const { isSeller } = useSelector((state) => state.seller);
     const { wishlist } = useSelector((state) => state.wishlist);
     const { allProducts } = useSelector((state) => state.products);
     const { cart } = useSelector((state) => state.cart);
@@ -111,7 +112,7 @@ const Header = ({ activeHeading }) => {
                     <div className={`${styles.button}`}>
                         <Link to="/shop-create">
                             <h1 className="text-white flex items-center">
-                                Become a Seller <IoIosArrowForward className="ml-1" />
+                                {isSeller ? "Seller Dashboard" : "Become a Seller"}  <IoIosArrowForward className="ml-1" />
                             </h1>
                         </Link>
                     </div>
@@ -245,7 +246,14 @@ const Header = ({ activeHeading }) => {
                             </span>
                         </div>
                     </div>
+
+                    {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
+
+
+
                 </div>
+
+
                 {/* Header Sidebar */}
 
                 {open && (
@@ -255,13 +263,16 @@ const Header = ({ activeHeading }) => {
                         <div className="fixed w-[60%] bg-white h-screen top-0 left-0">
                             <div className="w-full justify-between flex pr-3">
                                 <div>
-                                    <div className="relative mr-[15px]">
+                                    <div className="relative mr-[15px]" onClick={() => setOpenWishlist(true)}>
                                         <AiOutlineHeart size={30} className="mt-5 ml-3" />
                                         <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
                                             1
                                         </span>
                                     </div>
                                 </div>
+                                {openWishlist ? (
+                                    <Wishlist setOpenWishlist={setOpenWishlist} />
+                                ) : null}
                                 <RxCross1
                                     size={30}
                                     className="ml-4 mt-5"

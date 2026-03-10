@@ -25,7 +25,7 @@ const Wishlist = ({ setOpenWishlist }) => {
 
     return (
         <div className="fixed top-0 left-0 w-full bg-[#0000004b] min-h-screen z-10">
-            <div className="fixed top-0 right-0 min-h-full w-[25%] bg-white flex flex-col justify-between">
+            <div className="w-[80%] fixed top-0 right-0 min-h-full 800px:w-[25%] bg-white flex flex-col justify-between">
 
                 {
                     wishlist && wishlist.length === 0 ? (

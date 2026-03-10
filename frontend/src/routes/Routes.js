@@ -15,6 +15,7 @@ import ShopPage from "../pages/ShopPage.jsx"
 import CheckoutPage from "../pages/CheckoutPage.jsx"
 import PaymentPage from "../pages/PaymentPage.jsx"
 import OrderSuccessPage from "../pages/OrderSuccessPage.jsx"
+import OrderDetailsPage from "../pages/OrderDetailsPage.jsx"
 
 
 export {
@@ -35,4 +36,5 @@ export {
     CheckoutPage,
     PaymentPage,
     OrderSuccessPage,
+    OrderDetailsPage,
 }

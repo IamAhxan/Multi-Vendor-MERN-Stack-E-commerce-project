@@ -44,9 +44,7 @@ export const productReducer = createReducer(initialState, (builder) => {
             state.isLoading = false
             state.error = action.payload
         })
-        .addCase('clearErrors', (state) => {
-            state.error = null;
-        })
+
         .addCase('getAllProductsRequest', (state) => {
             state.isLoading = true;
         })
@@ -58,6 +56,9 @@ export const productReducer = createReducer(initialState, (builder) => {
         .addCase('getAllProductsFailed', (state, action) => {
             state.isLoading = false;
             state.error = action.payload;
+        })
+        .addCase('clearErrors', (state) => {
+            state.error = null;
         })
 
 });

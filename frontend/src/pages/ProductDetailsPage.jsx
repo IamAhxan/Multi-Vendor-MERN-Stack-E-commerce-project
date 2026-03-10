@@ -24,14 +24,6 @@ const ProductDetailsPage = () => {
     }, [dispatch]);
 
     useEffect(() => {
-        // if (allProducts && allProducts.length > 0) {
-        //     // Use .find() to match the ID from the URL with the ID in your DB
-        //     // Note: If 'id' from the URL is a string and 'i._id' is also a string, use ===
-        //     const product = allProducts.find((i) => i._id === id);
-
-        //     setData(product);
-        // }
-
         if (eventData !== null) {
             const product = allEvents.find((i) => i._id === id);
             setData(product);
@@ -41,16 +33,9 @@ const ProductDetailsPage = () => {
         }
 
 
-    }, [allProducts, allEvents, id, data]); // Depend on 'id' instead of 'name'
+    }, [allProducts, allEvents, id, data]);
 
-    // Updated Debug Logs
-    // useEffect(() => {
-    //     if (allProducts) {
-    //         console.log("Looking for ID:", id);
-    //         console.log("Total products loaded:", allProducts.length);
-    //         console.log("Match found:", allProducts.find((i) => i._id === id) ? "Yes" : "No");
-    //     }
-    // }, [allProducts, id]);
+
 
     return (
         <div>
@@ -64,7 +49,12 @@ const ProductDetailsPage = () => {
                     {data ? (
                         <>
                             <ProductDetails data={data} />
-                            <SuggestedProduct data={data} />
+                            {
+                                !eventData && (
+                                    <SuggestedProduct
+                                        data={data} />
+                                )
+                            }
                         </>
                     ) : (
                         <div className="flex flex-col justify-center items-center h-[50vh]">

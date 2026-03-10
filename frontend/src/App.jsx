@@ -4,11 +4,11 @@ import {
   LoginPage, SignupPage, ActivationPage, HomePage, ProductsPage,
   BestSellingPage, EventsPage, FAQPage, ProductDetailsPage,
   ProfilePage, SellerCreatePage, SellerActivationPage,
-  ShopLoginPage, ShopPage, CheckoutPage, PaymentPage, OrderSuccessPage
+  ShopLoginPage, ShopPage, CheckoutPage, PaymentPage, OrderSuccessPage, OrderDetailsPage
 } from "./routes/Routes.js";
 import {
   ShopDashboardPage, ShopCreateProduct, ShopAllProducts,
-  ShopCreateEvents, ShopAllEvents, ShopAllCoupouns
+  ShopCreateEvents, ShopAllEvents, ShopAllCoupouns, ShopAllOrders, ShopOrderDetails
 } from "./routes/ShopRoutes.jsx";
 import { ToastContainer, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -88,6 +88,11 @@ function App() {
               <ProfilePage />
             </ProtectedRoute>
           } />
+          <Route path="/user/order/:id" element={
+            <ProtectedRoute>
+              <OrderDetailsPage />
+            </ProtectedRoute>
+          } />
 
           {/* Seller / Shop Routes */}
           <Route path="/shop-create" element={<SellerCreatePage />} />
@@ -100,6 +105,8 @@ function App() {
           <Route path="/dashboard" element={<SellerProtectedRoute><ShopDashboardPage /></SellerProtectedRoute>} />
           <Route path="/dashboard-create-product" element={<SellerProtectedRoute><ShopCreateProduct /></SellerProtectedRoute>} />
           <Route path="/dashboard-products" element={<SellerProtectedRoute><ShopAllProducts /></SellerProtectedRoute>} />
+          <Route path="/dashboard-orders" element={<SellerProtectedRoute><ShopAllOrders /></SellerProtectedRoute>} />
+          <Route path="/order/:id" element={<SellerProtectedRoute><ShopOrderDetails /></SellerProtectedRoute>} />
           <Route path="/dashboard-create-event" element={<SellerProtectedRoute><ShopCreateEvents /></SellerProtectedRoute>} />
           <Route path="/dashboard-events" element={<SellerProtectedRoute><ShopAllEvents /></SellerProtectedRoute>} />
           <Route path="/dashboard-coupouns" element={<SellerProtectedRoute><ShopAllCoupouns /></SellerProtectedRoute>} />

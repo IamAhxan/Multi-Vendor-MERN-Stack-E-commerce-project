@@ -16,6 +16,7 @@ import {
     updateUserAddress,
     updateUserInformation,
 } from "../../redux/actions/user.js";
+import { getAllOrdersOfUser } from "../../redux/actions/order.js"
 import Loader from "../Layout/Loader.jsx";
 import { toast } from "react-toastify";
 import { RxCross1 } from "react-icons/rx";
@@ -218,20 +219,14 @@ const ProfileContent = ({ active }) => {
 
 const AllOrders = () => {
     const { user } = useSelector((state) => state.user);
+    const { orders } = useSelector((state) => state.order);
     const dispatch = useDispatch();
 
-    const orders = [
-        {
-            _id: "12312312312dasdas",
-            orderItems: [
-                {
-                    name: "IPhone 14 pro max",
-                },
-            ],
-            totalPrice: 120,
-            orderStatus: "processing",
-        },
-    ];
+    useEffect(() => {
+        dispatch(getAllOrdersOfUser(user._id))
+    }, [dispatch, user?._id])
+
+
 
     const columns = [
         { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -288,9 +283,9 @@ const AllOrders = () => {
         orders.forEach((item) => {
             row.push({
                 id: item._id,
-                itemsQty: item.orderItems.length, // Fixed: changed .cart to .orderItems
+                itemsQty: item.cart.length, // Fixed: changed .cart to .orderItems
                 total: "US$ " + item.totalPrice,
-                status: item.orderStatus, // Fixed: changed .status to .orderStatus
+                status: item.Status, // Fixed: changed .status to .orderStatus
             });
         });
     return (
