@@ -3,10 +3,13 @@ import styles from "./../styles/styles.js";
 import { BsFillBagFill } from "react-icons/bs";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { backend_url } from "../server.js";
+import { backend_url, server } from "../server.js";
 import { getAllOrdersOfUser } from "../redux/actions/order";
 import { RxCross1 } from "react-icons/rx";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import axios from "axios";
+  import { toast } from "react-toastify";
+
 
 const UserOrderDetails = () => {
   const { orders } = useSelector((state) => state.order);
@@ -15,6 +18,7 @@ const UserOrderDetails = () => {
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
 
   const { id } = useParams();
   useEffect(() => {
@@ -22,8 +26,23 @@ const UserOrderDetails = () => {
   }, [dispatch]);
 
   const data = orders && orders.find((order) => order._id === id);
-  const reviewHandler = () => {
-
+  const reviewHandler = async(e) => {
+    await axios.put(`${server}/product/create-new-review`, {
+      user,
+      rating,
+      comment,
+      productId: selectedItem._id,
+      orderId: id
+    },{withCredentials: true})
+    .then((res)=>{
+      toast.success(res.data.message)
+      dispatch(getAllOrdersOfUser(user._id));
+      setComment("")
+      setRating(null)
+      setOpen(false)
+    }).catch((error)=>{
+      toast.error(error)
+    })
   }
 
   return (
@@ -69,12 +88,15 @@ const UserOrderDetails = () => {
               </h5>
             </div>
             {data?.Status === "Delivered" && (
-              <div
+              item.isReviewed ? (
+<div
                 className={`${styles.button} text-white!`}
                 onClick={() => setOpen(true) || setSelectedItem(item)}
               >
                 Write a Review
               </div>
+              ) : null
+              
             )}
           </div>
         ))}
@@ -118,11 +140,11 @@ const UserOrderDetails = () => {
                     Write a comment
                                     <span className="ml-2 font-[400] text-[16px] text-[#00000052]"> (optional)</span>
                 </label>
-                <textarea name="comment" id="" cols="20" rows="5" placeholder="Write a comment" className="mt-2 w-[95%] border p-2 outline-none"></textarea>
+                <textarea name="comment" value={comment} onChange={(e)=>setComment(e.target.value)} id="" cols="20" rows="5" placeholder="Write a comment" className="mt-2 w-[95%] border p-2 outline-none"></textarea>
             </div>
             <br />
             <div className="text-white text-[20px] ml-3">
-                <button onClick={reviewHandler} className={`${styles.button} text-white text-[20px] ml-3]`}>Submit Review</button>
+                <button onClick={rating=>1 ? reviewHandler() : null}  className={`${styles.button} text-white text-[20px] ml-3]`}>Submit Review</button>
             </div>
           </div>
         </div>
