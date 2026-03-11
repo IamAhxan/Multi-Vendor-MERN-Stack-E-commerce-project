@@ -4,7 +4,7 @@ import {
   LoginPage, SignupPage, ActivationPage, HomePage, ProductsPage,
   BestSellingPage, EventsPage, FAQPage, ProductDetailsPage,
   ProfilePage, SellerCreatePage, SellerActivationPage,
-  ShopLoginPage, ShopPage, CheckoutPage, PaymentPage, OrderSuccessPage, OrderDetailsPage, TrackOrderPage
+  ShopLoginPage, ShopPage, CheckoutPage, PaymentPage, OrderSuccessPage, OrderDetailsPage, TrackOrderPage, ShopAllRefunds
 } from "./routes/Routes.js";
 import {
   ShopDashboardPage, ShopCreateProduct, ShopAllProducts,
@@ -115,6 +115,7 @@ function App() {
           <Route path="/dashboard-create-event" element={<SellerProtectedRoute><ShopCreateEvents /></SellerProtectedRoute>} />
           <Route path="/dashboard-events" element={<SellerProtectedRoute><ShopAllEvents /></SellerProtectedRoute>} />
           <Route path="/dashboard-coupouns" element={<SellerProtectedRoute><ShopAllCoupouns /></SellerProtectedRoute>} />
+          <Route path="/dashboard-refunds" element={<SellerProtectedRoute><ShopAllRefunds /></SellerProtectedRoute>} />
         </Routes>
       )}
 

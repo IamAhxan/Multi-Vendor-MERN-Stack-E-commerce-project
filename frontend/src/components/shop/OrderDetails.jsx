@@ -23,13 +23,25 @@ const OrderDetails = () => {
     }, [dispatch]);
 
     const data = orders && orders.find((order) => order._id === id);
+    console.log(data && data)
 
-    const OrderUpdateHandler = async (e) => {
-        await axios.put(`${server}/order/update-order-status/${id}`, {
+    const orderUpdateHandler = async (e) => {
+        await axios.put(`${server}/order/order-refund-success/${id}`, {
             status,
         }, { withCredentials: true }).then((res) => {
             toast.success("Order Updated!")
             navigate("/dashboard-orders")
+        }).catch((error) => {
+            toast.error(error.response?.data.message)
+        })
+    }
+
+    const refundUpdateHandler = async (e) => {
+        await axios.put(`${server}/order/order-refund-success/${id}`, {
+            status,
+        }, { withCredentials: true }).then((res) => {
+            toast.success("Order Updated!")
+            dispatch(getAllOrdersOfShop(seller._id));
         }).catch((error) => {
             toast.error(error.response?.data.message)
         })
@@ -111,26 +123,47 @@ const OrderDetails = () => {
             <br />
             <br />
             <h4 className="pt-3 text-[20px] font-[600]">Order Status:</h4>
+
+            {
+                data?.Status !== "Processing Refund" && data?.Status !== "Refund Success" && (
+                    <select value={status} onChange={(e) => setStatus(e.target.value)} className="w-[200px] mt-2 border h-[35px] rounded-[5px]">
+                        {
+                            [
+                                "Processing",
+                                "Transferred to delivery partner",
+                                "Shipping",
+                                "Received",
+                                "On the way",
+                                "Delivered",
+                                "Cancelled",
+                                "Refunded",
+                            ].slice([
+                                "Processing",
+                                "Transferred to delivery partner",
+                                "Shipping",
+                                "Received",
+                                "On the way",
+                                "Delivered",
+                                "Cancelled",
+                                "Refunded",
+                            ].indexOf(data?.Status)).map((option, index) => (
+                                <option key={index} value={option}>
+                                    {option}
+                                </option>
+                            ))
+                        }
+                    </select>
+                )
+            }
             <select value={status} onChange={(e) => setStatus(e.target.value)} className="w-[200px] mt-2 border h-[35px] rounded-[5px]">
+
                 {
                     [
-                        "Processing",
-                        "Transferred to delivery partner",
-                        "Shipping",
-                        "Received",
-                        "On the way",
-                        "Delivered",
-                        "Cancelled",
-                        "Refunded",
+                        "Processing Refund",
+                        "Refund Success",
                     ].slice([
-                        "Processing",
-                        "Transferred to delivery partner",
-                        "Shipping",
-                        "Received",
-                        "On the way",
-                        "Delivered",
-                        "Cancelled",
-                        "Refunded",
+                        "Processing Refund",
+                        "Refund Success",
                     ].indexOf(data?.Status)).map((option, index) => (
                         <option key={index} value={option}>
                             {option}
@@ -138,7 +171,7 @@ const OrderDetails = () => {
                     ))
                 }
             </select>
-            <div className={`${styles.button} !bg-[#fce1e6] !rounded-[4px] !text-[#e94560] font-[600] !h-[45px] !text-[18px]`} onClick={OrderUpdateHandler}>Update Status</div>
+            <div className={`${styles.button} !bg-[#fce1e6] !rounded-[4px] !text-[#e94560] font-[600] !h-[45px] !text-[18px]`} onClick={data?.status !== "Processing Refund" ? orderUpdateHandler : refundUpdateHandler}>Update Status</div>
         </div>
     );
 };
