@@ -10,7 +10,7 @@ import styles from "../../styles/styles.js";
 import { DataGrid } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { MdOutlineTrackChanges } from "react-icons/md";
+import { MdTrackChanges } from "react-icons/md";
 import {
     deleteUserAddress,
     updateUserAddress,
@@ -302,18 +302,17 @@ const AllOrders = () => {
 };
 
 const AllRefundOrders = () => {
-    const orders = [
-        {
-            _id: "12312312312dasdas",
-            orderItems: [
-                {
-                    name: "IPhone 14 pro max",
-                },
-            ],
-            totalPrice: 120,
-            orderStatus: "processing",
-        },
-    ];
+
+    const { user } = useSelector((state) => state.user);
+    const { orders } = useSelector((state) => state.order);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getAllOrdersOfUser(user._id))
+    }, [dispatch, user?._id])
+    const eligibleOrders = orders && orders.filter((item) => item.Status === "Processing Refund")
+
+
 
     const columns = [
         { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -365,13 +364,14 @@ const AllRefundOrders = () => {
     ];
 
     const row = [];
-    orders &&
-        orders.forEach((item) => {
+
+    eligibleOrders &&
+        eligibleOrders.forEach((item) => {
             row.push({
                 id: item._id,
-                itemsQty: item.orderItems.length, // Fixed: changed .cart to .orderItems
+                itemsQty: item.cart.length, // Fixed: changed .cart to .orderItems
                 total: "US$ " + item.totalPrice,
-                status: item.orderStatus, // Fixed: changed .status to .orderStatus
+                status: item.Status, // Fixed: changed .status to .orderStatus
             });
         });
 
@@ -389,21 +389,19 @@ const AllRefundOrders = () => {
 };
 
 const TrackOrder = () => {
-    const orders = [
-        {
-            _id: "12312312312dasdas",
-            orderItems: [
-                {
-                    name: "IPhone 14 pro max",
-                },
-            ],
-            totalPrice: 120,
-            orderStatus: "processing",
-        },
-    ];
+    const { user } = useSelector((state) => state.user);
+    const { orders } = useSelector((state) => state.order);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getAllOrdersOfUser(user._id))
+    }, [dispatch, user?._id])
+
+
 
     const columns = [
         { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+
         {
             field: "status",
             headerName: "Status",
@@ -439,9 +437,9 @@ const TrackOrder = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={`/user/order/${params.id}`}>
+                        <Link to={`/user/track/order/${params.id}`}>
                             <Button>
-                                <MdOutlineTrackChanges size={20} />
+                                <MdTrackChanges size={20} />
                             </Button>
                         </Link>
                     </>
@@ -451,13 +449,14 @@ const TrackOrder = () => {
     ];
 
     const row = [];
+
     orders &&
         orders.forEach((item) => {
             row.push({
                 id: item._id,
-                itemsQty: item.orderItems.length, // Fixed: changed .cart to .orderItems
+                itemsQty: item.cart.length, // Fixed: changed .cart to .orderItems
                 total: "US$ " + item.totalPrice,
-                status: item.orderStatus, // Fixed: changed .status to .orderStatus
+                status: item.Status, // Fixed: changed .status to .orderStatus
             });
         });
 

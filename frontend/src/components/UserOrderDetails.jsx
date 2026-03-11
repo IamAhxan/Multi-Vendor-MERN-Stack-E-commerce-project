@@ -8,7 +8,7 @@ import { getAllOrdersOfUser } from "../redux/actions/order";
 import { RxCross1 } from "react-icons/rx";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import axios from "axios";
-  import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 
 const UserOrderDetails = () => {
@@ -26,24 +26,31 @@ const UserOrderDetails = () => {
   }, [dispatch]);
 
   const data = orders && orders.find((order) => order._id === id);
-  const reviewHandler = async(e) => {
+  const reviewHandler = async (e) => {
     await axios.put(`${server}/product/create-new-review`, {
       user,
       rating,
       comment,
       productId: selectedItem._id,
       orderId: id
-    },{withCredentials: true})
-    .then((res)=>{
-      toast.success(res.data.message)
-      dispatch(getAllOrdersOfUser(user._id));
-      setComment("")
-      setRating(null)
-      setOpen(false)
-    }).catch((error)=>{
-      toast.error(error)
-    })
+    }, { withCredentials: true })
+      .then((res) => {
+        toast.success(res.data.message)
+        dispatch(getAllOrdersOfUser(user._id));
+        setComment("")
+        setRating(null)
+        setOpen(false)
+      }).catch((error) => {
+        toast.error(error)
+      })
   }
+
+  const refundHandler = async () => {
+    await axios.put(`${server}/order/order-refund/${id}`, { status: "Processing Refund" }, { withCredentials: true })
+      .then((res) => toast.success(res.data.message))
+      .catch((error) => toast.error(error.response.data.message))
+  }
+
 
   return (
     <div className={`py-4 min-h-screen ${styles.section}`}>
@@ -89,14 +96,14 @@ const UserOrderDetails = () => {
             </div>
             {data?.Status === "Delivered" && (
               item.isReviewed ? (
-<div
-                className={`${styles.button} text-white!`}
-                onClick={() => setOpen(true) || setSelectedItem(item)}
-              >
-                Write a Review
-              </div>
+                <div
+                  className={`${styles.button} text-white!`}
+                  onClick={() => setOpen(true) || setSelectedItem(item)}
+                >
+                  Write a Review
+                </div>
               ) : null
-              
+
             )}
           </div>
         ))}
@@ -132,19 +139,19 @@ const UserOrderDetails = () => {
             {/* Ratings */}
             <h5 className="pl-3 text-[20px] font-[500]">Give a Rating <span className="text-red-500">*</span></h5>
             <div className="flex w-full ml-2 pt-1">
-                {[1,2,3,4,5].map((i)=>rating>=i?(<AiFillStar key={i} className="mr-1 cursor-pointer" color="rgb(246,186,0)" size={25} onClick={()=>setRating(i)}/>):(<AiOutlineStar key={i} className="mr-1 cursor-pointer" color="rgb(246,186,0)" size={25} onClick={()=>setRating(i)}/>))}
+              {[1, 2, 3, 4, 5].map((i) => rating >= i ? (<AiFillStar key={i} className="mr-1 cursor-pointer" color="rgb(246,186,0)" size={25} onClick={() => setRating(i)} />) : (<AiOutlineStar key={i} className="mr-1 cursor-pointer" color="rgb(246,186,0)" size={25} onClick={() => setRating(i)} />))}
             </div>
             <br />
             <div className="w-full ml-3">
-                <label htmlFor="" className="block text-[20px] font-[500]">
-                    Write a comment
-                                    <span className="ml-2 font-[400] text-[16px] text-[#00000052]"> (optional)</span>
-                </label>
-                <textarea name="comment" value={comment} onChange={(e)=>setComment(e.target.value)} id="" cols="20" rows="5" placeholder="Write a comment" className="mt-2 w-[95%] border p-2 outline-none"></textarea>
+              <label htmlFor="" className="block text-[20px] font-[500]">
+                Write a comment
+                <span className="ml-2 font-[400] text-[16px] text-[#00000052]"> (optional)</span>
+              </label>
+              <textarea name="comment" value={comment} onChange={(e) => setComment(e.target.value)} id="" cols="20" rows="5" placeholder="Write a comment" className="mt-2 w-[95%] border p-2 outline-none"></textarea>
             </div>
             <br />
             <div className="text-white text-[20px] ml-3">
-                <button onClick={rating=>1 ? reviewHandler() : null}  className={`${styles.button} text-white text-[20px] ml-3]`}>Submit Review</button>
+              <button onClick={rating => 1 ? reviewHandler() : null} className={`${styles.button} text-white text-[20px] ml-3]`}>Submit Review</button>
             </div>
           </div>
         </div>
@@ -180,16 +187,29 @@ const UserOrderDetails = () => {
                 : "Pending Payment"}
             </span>
           </h4>
+          <br />
+
+          {
+            data?.Status === "Delivered" && (
+              <div className={`${styles.button} text-white`} onClick={refundHandler}>
+                Give a Refund
+              </div>
+            )
+          }
+
         </div>
       </div>
       <br />
       <Link>
         <div className={`${styles.button} text-white`}>Send Message</div>
       </Link>
+
+
       <br />
       <br />
     </div>
   );
-};
+}
+  ;
 
 export default UserOrderDetails;

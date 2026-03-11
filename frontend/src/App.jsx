@@ -4,7 +4,7 @@ import {
   LoginPage, SignupPage, ActivationPage, HomePage, ProductsPage,
   BestSellingPage, EventsPage, FAQPage, ProductDetailsPage,
   ProfilePage, SellerCreatePage, SellerActivationPage,
-  ShopLoginPage, ShopPage, CheckoutPage, PaymentPage, OrderSuccessPage, OrderDetailsPage
+  ShopLoginPage, ShopPage, CheckoutPage, PaymentPage, OrderSuccessPage, OrderDetailsPage, TrackOrderPage
 } from "./routes/Routes.js";
 import {
   ShopDashboardPage, ShopCreateProduct, ShopAllProducts,
@@ -91,6 +91,11 @@ function App() {
           <Route path="/user/order/:id" element={
             <ProtectedRoute>
               <OrderDetailsPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/user/track/order/:id" element={
+            <ProtectedRoute>
+              <TrackOrderPage />
             </ProtectedRoute>
           } />
 

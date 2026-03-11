@@ -113,7 +113,7 @@ router.put(
             res.status(200).json({
                 success: true,
                 order,
-            })
+            });
 
             async function updateOrder(id, qty) {
                 const product = await Product.findById(id);
@@ -126,4 +126,31 @@ router.put(
         }
     }),
 );
+
+// Give a Refund to user by seller
+
+router.put(
+    "/order-refund/:id",
+    catchAsyncErrors(async (req, res, next) => {
+        try {
+            const order = await Order.findById(req.params.id);
+            if (!order) {
+                return next(new ErrorHandler("Order not found", 404));
+            }
+
+            order.Status = req.body.status;
+
+            await order.save({ validateBeforeSave: false });
+
+            res.status(200).json({
+                success: true,
+                order,
+                message: "Refund requested Successfully",
+            });
+        } catch (error) {
+            return next(new ErrorHandler(error.message, 500));
+        }
+    }),
+);
+
 export default router;
