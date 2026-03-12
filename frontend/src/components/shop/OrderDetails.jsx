@@ -23,7 +23,6 @@ const OrderDetails = () => {
     }, [dispatch]);
 
     const data = orders && orders.find((order) => order._id === id);
-    console.log(data && data)
 
     const orderUpdateHandler = async (e) => {
         await axios.put(`${server}/order/order-refund-success/${id}`, {
