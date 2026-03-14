@@ -8,7 +8,7 @@ import {
 } from "./routes/Routes.js";
 import {
   ShopDashboardPage, ShopCreateProduct, ShopAllProducts,
-  ShopCreateEvents, ShopAllEvents, ShopAllCoupouns, ShopAllOrders, ShopOrderDetails, ShopSettingsPage
+  ShopCreateEvents, ShopAllEvents, ShopAllCoupouns, ShopAllOrders, ShopOrderDetails, ShopSettingsPage, ShopWithdrawMoneyPage
 } from "./routes/ShopRoutes.jsx";
 import { ToastContainer, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -116,6 +116,7 @@ function App() {
           <Route path="/dashboard-create-event" element={<SellerProtectedRoute><ShopCreateEvents /></SellerProtectedRoute>} />
           <Route path="/dashboard-events" element={<SellerProtectedRoute><ShopAllEvents /></SellerProtectedRoute>} />
           <Route path="/dashboard-coupouns" element={<SellerProtectedRoute><ShopAllCoupouns /></SellerProtectedRoute>} />
+          <Route path="/dashboard-withdraw-money" element={<SellerProtectedRoute><ShopWithdrawMoneyPage /></SellerProtectedRoute>} />
           <Route path="/dashboard-refunds" element={<SellerProtectedRoute><ShopAllRefunds /></SellerProtectedRoute>} />
         </Routes>
       )}

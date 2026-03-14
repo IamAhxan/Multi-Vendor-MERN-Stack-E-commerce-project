@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { server } from '../../server';
+import { backend_url, server } from '../../server';
 import styles from '../../styles/styles';
 import axios from 'axios';
 import { getAllProductsShop } from '../../redux/actions/product';
@@ -13,6 +13,8 @@ const ShopInfo = ({ isOwner }) => {
     const [isLoading, setIsLoading] = useState(false);
     const { id } = useParams();
     const dispatch = useDispatch();
+
+
 
     useEffect(() => {
         dispatch(getAllProductsShop(id));
@@ -32,7 +34,6 @@ const ShopInfo = ({ isOwner }) => {
         await axios.get(`${server}/shop/logout`, { withCredentials: true });
         window.location.reload();
     };
-
     // useMemo prevents recalculating on every re-render unless products change
     const avgRating = useMemo(() => {
         if (!products || products.length === 0) return 0;
@@ -47,7 +48,7 @@ const ShopInfo = ({ isOwner }) => {
             <div className="w-full py-5">
                 <div className="w-full flex items-center justify-center">
                     <img
-                        src={data?.avatar?.url}
+                        src={`${backend_url}upload/${data?.avatar}`}
                         alt="Shop Avatar"
                         className="w-[150px] h-[150px] object-cover rounded-full border-[3px] border-[#3ad132]"
                     />

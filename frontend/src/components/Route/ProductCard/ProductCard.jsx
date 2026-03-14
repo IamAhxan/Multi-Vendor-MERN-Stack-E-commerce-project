@@ -17,7 +17,7 @@ import { toast } from 'react-toastify';
 import { addToCart } from '../../../redux/actions/cart.js';
 import Ratings from '../../products/Ratings.jsx';
 
-const ProductCard = ({ data }) => {
+const ProductCard = ({ data, isEvent }) => {
     const [click, setClick] = useState(false);
     const [open, setOpen] = useState(false);
     const dispatch = useDispatch()
@@ -71,7 +71,7 @@ const ProductCard = ({ data }) => {
                 <div className="flex justify-end"></div>
 
                 {/* 3. FIX SRC WARNING: Use null instead of "" for fallback */}
-                <Link to={`/product/${data._id}`}>
+                <Link to={`${isEvent ? `/product/${data._id}?isEvent=true` : `/shop/preview/${data.shop._id}`}`}>
                     <img
                         src={data?.images?.length > 0 ? `${backend_url}upload/${data.images[0]}` : null}
                         alt={data?.name}
@@ -83,7 +83,8 @@ const ProductCard = ({ data }) => {
                     <h5 className={`${styles.shop_name}`}>{data?.shop?.name}</h5>
                 </Link>
 
-                <Link to={`/product/${data._id}`}>
+                <Link to={`${isEvent ? `/product/${data._id}?isEvent=true` : `/shop/preview/${data.shop._id}`}`}>
+
                     <h4 className='pb-3 font-[500]'>
                         {data?.name?.length > 40 ? data.name.slice(0, 40) + "..." : data?.name}
                     </h4>

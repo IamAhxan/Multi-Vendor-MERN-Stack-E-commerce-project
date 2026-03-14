@@ -35,18 +35,22 @@ const productSchema = new mongoose.Schema({
   ],
   reviews: [
     {
-      user:{
+      user: {
         type: Object,
       },
-      rating:{
+      rating: {
         type: Number,
       },
-      comment:{
+      comment: {
         type: String,
       },
-      productId:{
+      productId: {
         type: String,
       },
+      createdAt: {
+        type: Date,
+        default: Date.now(),
+      }
     },
   ],
   ratings: {
