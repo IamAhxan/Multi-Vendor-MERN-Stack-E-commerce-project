@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { MdTrackChanges } from "react-icons/md";
 import {
     deleteUserAddress,
+    loadUser,
     updateUserAddress,
     updateUserInformation,
 } from "../../redux/actions/user.js";
@@ -80,8 +81,9 @@ const ProfileContent = ({ active }) => {
                 },
                 withCredentials: true,
             })
-            .then((response) => {
-                window.location.reload();
+            .then((res) => {
+                dispatch(loadUser())
+                toast.success("Avatar Updated")
             })
             .catch((error) => {
                 toast.error(error);

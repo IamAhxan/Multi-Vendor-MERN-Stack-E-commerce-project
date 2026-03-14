@@ -147,6 +147,10 @@ import catchAsyncErrors from "../middleware/catchAsyncError.js";
 import sendMail from "../utils/sendMail.js";
 import sendShopToken from "../utils/shopToken.js";
 import { isAuthenticated, isSeller } from './../middleware/auth.js'
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 const router = express.Router();
@@ -391,5 +395,88 @@ router.get("/get-shop-info/:id", catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler(error.message, 400))
     }
 }))
+
+// Update Shop Profile Picture
+
+router.put(
+    "/update-shop-avatar",
+    isSeller,
+    upload.single("image"),
+    catchAsyncErrors(async (req, res, next) => {
+        try {
+            const existsUser = await Shop.findById(req.seller._id);
+
+            // Safely handle the old avatar deletion
+            if (existsUser.avatar) {
+                // Note: Adjust "../../uploads" based on your actual folder structure relative to this file
+                const existAvatarPath = path.join(
+                    __dirname,
+                    "../../upload",
+                    existsUser.avatar,
+                );
+                console.log("Full path to delete:", existAvatarPath); // Check your terminal for this!
+
+                if (fs.existsSync(existAvatarPath)) {
+                    fs.unlinkSync(existAvatarPath);
+                } else {
+                    console.log("File not found at this path, skipping deletion.");
+                }
+            }
+
+            const fileUrl = req.file.filename;
+
+            const shop = await Shop.findByIdAndUpdate(
+                req.seller._id,
+                { avatar: fileUrl },
+                { new: true },
+            );
+
+            res.status(200).json({
+                success: true,
+                shop,
+            });
+        } catch (error) {
+            // Now that __dirname is defined, this catch block shouldn't trigger
+            // unless there's a different issue.
+            return next(new ErrorHandler(error.message, 500));
+        }
+    }),
+);
+
+router.put(
+    "/update-shop-info",
+    isSeller,
+    catchAsyncErrors(async (req, res, next) => {
+        try {
+            const { name, description, address, phoneNumber, zipCode } = req.body;
+            const shop = await Shop.findOne(req.seller._id).select("+password");
+            if (!shop) {
+                return next(new ErrorHandler("Shop not found", 404));
+            }
+
+            // const isPasswordValid = await shop.comparePassword(password);
+            // if (!isPasswordValid) {
+            //     return next(
+            //         new ErrorHandler("Please provide correct information", 400),
+            //     );
+            // }
+
+            shop.name = name;
+            shop.description = description;
+            shop.address = address;
+            shop.phoneNumber = phoneNumber;
+            shop.zipCode = zipCode;
+            await shop.save();
+
+            res.status(201).json({
+                success: true,
+                shop,
+            });
+        } catch (error) {
+            return next(new ErrorHandler(error.message, 500));
+        }
+    }),
+);
+
 
 export default router;

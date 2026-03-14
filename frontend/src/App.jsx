@@ -8,7 +8,7 @@ import {
 } from "./routes/Routes.js";
 import {
   ShopDashboardPage, ShopCreateProduct, ShopAllProducts,
-  ShopCreateEvents, ShopAllEvents, ShopAllCoupouns, ShopAllOrders, ShopOrderDetails
+  ShopCreateEvents, ShopAllEvents, ShopAllCoupouns, ShopAllOrders, ShopOrderDetails, ShopSettingsPage
 } from "./routes/ShopRoutes.jsx";
 import { ToastContainer, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -103,6 +103,7 @@ function App() {
           <Route path="/shop-create" element={<SellerCreatePage />} />
           <Route path="/shop-login" element={<ShopLoginPage />} />
           <Route path="/shop/:id" element={<SellerProtectedRoute><ShopPage /></SellerProtectedRoute>} />
+          <Route path="/settings" element={<SellerProtectedRoute><ShopSettingsPage /></SellerProtectedRoute>} />
           <Route path="/seller/activation/:activation_token" element={<SellerActivationPage />} />
           <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
 
