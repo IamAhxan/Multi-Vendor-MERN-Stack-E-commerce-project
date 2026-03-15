@@ -2,6 +2,7 @@ import Conversation from "../model/conversation.model.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
 import catchAsyncErrors from "../middleware/catchAsyncError.js";
 import express from "express";
+import { isSeller } from "../middleware/auth.js";
 const router = express.Router()
 
 
@@ -41,7 +42,21 @@ router.post("/create-new-conversation", catchAsyncErrors(async (req, res, next) 
 }))
 
 
-// Get User Conversations
+// Get Seller Conversations
+
+router.get("/get-all-conversation-seller/:id", isSeller, catchAsyncErrors(async (req, res, next) => {
+    try {
+        const conversations = await Conversation.find({ members: { $in: [req.params.id] } }).sort({ updatedAt: -1, createdAt: -1 });
+
+        res.status(201).json({
+            success: true,
+            conversations,
+        })
+
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+    }
+}))
 
 
 export default router;
