@@ -71,7 +71,7 @@ const ProductCard = ({ data, isEvent }) => {
                 <div className="flex justify-end"></div>
 
                 {/* 3. FIX SRC WARNING: Use null instead of "" for fallback */}
-                <Link to={`${isEvent ? `/product/${data._id}?isEvent=true` : `/shop/preview/${data.shop._id}`}`}>
+                <Link to={`${isEvent === true ? `/product/${data._id}?isEvent=true` : `/product/${data._id}`}`}>
                     <img
                         src={data?.images?.length > 0 ? `${backend_url}upload/${data.images[0]}` : null}
                         alt={data?.name}

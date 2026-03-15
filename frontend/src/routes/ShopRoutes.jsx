@@ -8,6 +8,7 @@ import ShopAllOrders from "./../pages/Shop/ShopAllOrders.jsx";
 import ShopOrderDetails from "./../pages/Shop/ShopOrderDetails.jsx";
 import ShopSettingsPage from "./../pages/Shop/ShopSettingsPage.jsx";
 import ShopWithdrawMoneyPage from "./../pages/Shop/ShopWithdrawMoneyPage.jsx";
+import ShopInboxPage from "./../pages/Shop/ShopInboxPage.jsx";
 
 
 export {
@@ -21,5 +22,6 @@ export {
     ShopOrderDetails,
     ShopSettingsPage,
     ShopWithdrawMoneyPage,
+    ShopInboxPage,
 
 }
