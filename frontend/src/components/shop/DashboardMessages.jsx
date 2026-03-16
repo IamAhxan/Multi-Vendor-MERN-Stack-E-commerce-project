@@ -85,6 +85,7 @@ const MessageList = ({ data, index, setOpen }) => {
             </div>
         </div >
     )
+
 }
 
 
