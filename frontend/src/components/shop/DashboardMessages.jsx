@@ -104,6 +104,28 @@ const SellerInbox = ({ setOpen }) => {
                 <AiOutlineArrowRight size={20} onClick={() => setOpen(false)} className='cursor-pointer' />
 
             </div>
+
+            {/* Messages */}
+            <div className="px-3 h-[65vh] py-3 overflow-y-scroll">
+                <div className="flex w-full my-2">
+                    <img src="http://localhost:3000/upload/1772282961145.jpg" alt="" className='w-[40px] h-[40px] rounded-full mr-3' />
+
+                    <div className="w-max bg-[#38c776] text-white h-min p-2 rounded">
+                        <p>Hello There</p>
+                    </div>
+                </div>
+                <div className="flex w-full justify-end my-2">
+                    <div className="w-max bg-[#38c776] text-white h-min p-2 rounded">
+                        <p>Hi </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
             {/* Send Message Input */}
 
             <form aria-required={true} className='p-3 relative flex justify-between items-center justify-center'>
