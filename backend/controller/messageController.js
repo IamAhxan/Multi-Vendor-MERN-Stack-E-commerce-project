@@ -3,11 +3,12 @@ import ErrorHandler from "../utils/ErrorHandler.js";
 import catchAsyncErrors from "../middleware/catchAsyncError.js";
 import express from "express";
 import Messages from "../model/messages.model.js";
+import { upload } from "../multer.js";
 const router = express.Router();
 
 // Create a new Message
 router.post(
-    "create-new-message",
+    "/create-new-message",
     upload.array("images"),
     catchAsyncErrors(async (req, res, next) => {
         try {
@@ -25,7 +26,9 @@ router.post(
             const message = new Messages({
                 conversationId: messageData.conversationId,
                 sender: messageData.sender,
+                text: messageData.text,
                 images: messageData.images ? messageData.images : undefined,
+
             });
 
             await message.save();

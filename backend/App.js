@@ -10,6 +10,7 @@ import coupon from './controller/coupounCode.js'
 import payment from './controller/paymentController.js'
 import order from './controller/orderController.js'
 import conversation from './controller/conversationController.js'
+import message from './controller/messageController.js'
 import cors from 'cors'
 
 const app = express();
@@ -34,6 +35,7 @@ app.use("/coupon", coupon);  // <-- Mount your Coupon routes under /api
 app.use("/payment", payment);  // <-- Mount your Payment routes under /api
 app.use("/order", order);  // <-- Mount your order routes under /api
 app.use("/conversation", conversation);  // <-- Mount your order routes under /api
+app.use("/message", message);  // <-- Mount your order routes under /api
 
 
 // Error handler middleware
