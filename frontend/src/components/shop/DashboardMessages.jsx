@@ -241,7 +241,7 @@ const SellerInbox = ({ setOpen, newMessage, setNewMessage, sendMessageHandler, m
                     <img src={`${backend_url}upload/${userData.avatar}`} alt="" className="w-[60px] h-[60px] rounded-full" />
                     <div className="pl-3">
                         <h1 className="text-[18px] font-[600]">{userData?.name}</h1>
-                        <h1>{activeStatus ? "Active Now" : ""}</h1>
+                        <h1>{activeStatus ? "Active Now" : "Offline"}</h1>
                     </div>
                 </div>
                 <AiOutlineArrowRight size={20} onClick={() => setOpen(false)} className='cursor-pointer' />
@@ -250,8 +250,8 @@ const SellerInbox = ({ setOpen, newMessage, setNewMessage, sendMessageHandler, m
 
             {/* Messages */}
             <div className="px-3 h-[65vh] py-3 overflow-y-scroll">
-            {
-                messages && messages.map((item, index) => (
+                {
+                    messages && messages.map((item, index) => (
 
                         <div className={`flex w-full my-2 ${item.sender === sellerId ? "justify-end" : "justify-start"}`}>
                             {
@@ -268,8 +268,8 @@ const SellerInbox = ({ setOpen, newMessage, setNewMessage, sendMessageHandler, m
                             </div>
                         </div>
 
-                ))
-            }
+                    ))
+                }
             </div>
 
 

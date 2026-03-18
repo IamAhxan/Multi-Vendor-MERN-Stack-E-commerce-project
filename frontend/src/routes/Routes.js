@@ -18,6 +18,7 @@ import OrderSuccessPage from "../pages/OrderSuccessPage.jsx"
 import OrderDetailsPage from "../pages/OrderDetailsPage.jsx"
 import TrackOrderPage from "../pages/TrackOrderPage.jsx"
 import ShopAllRefunds from "../pages/ShopAllRefunds.jsx"
+import UserInbox from "../pages/UserInbox.jsx"
 
 
 export {
@@ -41,4 +42,5 @@ export {
     OrderDetailsPage,
     TrackOrderPage,
     ShopAllRefunds,
+    UserInbox,
 }
