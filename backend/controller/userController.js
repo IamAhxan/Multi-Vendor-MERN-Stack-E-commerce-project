@@ -392,5 +392,22 @@ router.put("/update-user-password", isAuthenticated, catchAsyncErrors(async (req
         return next(new ErrorHandler(error.message, 500));
 
     }
+}));
+
+
+
+// find user information with userId
+router.get("/user-info/:id", catchAsyncErrors(async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
+
+        res.status(200).json({
+            success: true,
+            user,
+        })
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+
+    }
 }))
 export default router;

@@ -28,7 +28,6 @@ router.post(
                 sender: messageData.sender,
                 text: messageData.text,
                 images: messageData.images ? messageData.images : undefined,
-
             });
 
             await message.save();
@@ -36,6 +35,25 @@ router.post(
             res.status(201).json({
                 success: true,
                 message,
+            });
+        } catch (error) {
+            return next(new ErrorHandler(error.message, 500));
+        }
+    }),
+);
+
+// Get Messages of a Conversation
+router.get(
+    "/get-all-messages/:id",
+    catchAsyncErrors(async (req, res, next) => {
+        try {
+            const messages = await Messages.find({
+                conversationId: req.params.id,
+            }).sort({ createdAt: 1 });
+
+            res.status(201).json({
+                success: true,
+                messages,
             });
         } catch (error) {
             return next(new ErrorHandler(error.message, 500));
