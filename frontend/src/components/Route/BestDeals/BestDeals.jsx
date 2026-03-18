@@ -11,11 +11,13 @@ const BestDeals = () => {
 
 
     useEffect(() => {
+        const allProductsData = [...allProducts]
+        const sortedData = allProductsData.sort((a, b) => b.sold_out - a.sold_out);
         // Only run logic if products exists and is an array
-        if (allProducts && Array.isArray(allProducts)) {
-            const firstFive = allProducts.slice(0, 5);
-            setData(firstFive);
-        }
+
+        const firstFive = sortedData && sortedData.slice(0, 5);
+        setData(firstFive);
+
     }, [allProducts]);
     if (isLoading) return <div><Loader /></div>;
 
