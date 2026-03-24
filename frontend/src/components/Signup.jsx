@@ -76,6 +76,7 @@ const Signup = () => {
             setAvatar(null);
         } catch (err) {
             toast.error(err.response?.data?.message || "Signup failed");
+            console.log(err)
         }
     };
 
