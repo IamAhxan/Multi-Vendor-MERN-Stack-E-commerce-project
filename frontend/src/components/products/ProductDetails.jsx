@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, Links, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../../styles/styles";
 import {
     AiFillHeart,
