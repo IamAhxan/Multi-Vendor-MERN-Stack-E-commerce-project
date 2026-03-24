@@ -19,10 +19,17 @@ app.use(express.json());
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors({
-    origin: "http://localhost:5173", // frontend URL
+    origin: ["http://localhost:5173"], // Add Vercel frontend URL here later
     credentials: true, // allow cookies
 }));
-app.use("/upload", express.static("upload"));
+
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use("/upload", express.static(path.join(__dirname, "upload")));
 
 
 // import routes
