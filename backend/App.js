@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors({
-    origin: ["http://localhost:5173"], // Add Vercel frontend URL here later
+    origin: ["http://localhost:5173", "https://multi-vendor-mern-stack-frontend.vercel.app"],
     credentials: true, // allow cookies
 }));
 
