@@ -7,7 +7,7 @@ const sendMail = async (options) => {
         service: process.env.SMTP_SERVICE,
         auth: {
             user: process.env.SMTP_MAIL,
-            pass: process.env.SMTP_PASSWORD
+            pass: process.env.SMTP_PASSWORD ? process.env.SMTP_PASSWORD.replace(/\s+/g, '') : ''
         }
     })
 
