@@ -76,7 +76,7 @@ router.post(
                 });
             } catch (error) {
                 console.error("Email sending failed:", error.message);
-                return next(new ErrorHandler("Failed to send activation email", 500));
+                return next(new ErrorHandler(`Failed to send activation email: ${error.message}`, 500));
             }
 
             /* ---------- SUCCESS RESPONSE ---------- */

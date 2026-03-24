@@ -220,7 +220,7 @@ router.post(
                     message: `Please check your email: ${sellerData.email} to activate your shop!`,
                 });
             } catch (mailError) {
-                return next(new ErrorHandler(mailError.message, 500));
+                return next(new ErrorHandler(`Failed to send activation email: ${mailError.message}`, 500));
             }
         } catch (error) {
             return next(new ErrorHandler(error.message, 400));
