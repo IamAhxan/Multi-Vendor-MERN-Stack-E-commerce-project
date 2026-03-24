@@ -65,7 +65,7 @@ router.post(
                 return next(new ErrorHandler("Token generation failed", 500));
             }
 
-            const activationUrl = `http://localhost:5173/activation/${activationToken}`;
+            const activationUrl = `https://multi-vendor-mern-stack-frontend.vercel.app/activation/${activationToken}`;
 
             /* ---------- SEND MAIL ---------- */
             try {

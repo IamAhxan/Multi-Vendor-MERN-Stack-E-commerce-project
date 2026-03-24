@@ -207,7 +207,7 @@ router.post(
             const activationToken = createActivationToken(sellerData);
 
             // 4. Send Email
-            const activationUrl = `http://localhost:5173/seller/activation/${activationToken}`;
+            const activationUrl = `https://multi-vendor-mern-stack-frontend.vercel.app/seller/activation/${activationToken}`;
             try {
                 await sendMail({
                     email: sellerData.email,
