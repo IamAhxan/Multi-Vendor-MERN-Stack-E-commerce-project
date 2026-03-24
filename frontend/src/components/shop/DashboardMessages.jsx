@@ -12,7 +12,7 @@ import styles from '../../styles/styles'
 import socketIO from 'socket.io-client'
 import { format } from 'timeago.js'
 import Loader from '../Layout/Loader'
-const ENDPOINT = "http://localhost:4000"
+const ENDPOINT = "https://multi-vendor-socket.onrender.com"
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] })
 const DashboardMessages = () => {
     const { seller } = useSelector((state) => state.seller);

@@ -14,7 +14,7 @@ import { format } from 'timeago.js'
 import Loader from '../components/Layout/Loader'
 import Header from '../components/Layout/Header/Header'
 
-const ENDPOINT = "http://localhost:4000"
+const ENDPOINT = "https://multi-vendor-socket.onrender.com"
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] })
 
 const UserInbox = () => {

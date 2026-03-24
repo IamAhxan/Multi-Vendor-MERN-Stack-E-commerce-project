@@ -1,3 +1,3 @@
-export const server = "http://localhost:3000"
+export const server = "https://multi-vendor-backend-q64b.onrender.com"
 
-export const backend_url = "http://localhost:3000/"
+export const backend_url = "https://multi-vendor-backend-q64b.onrender.com/"
