@@ -1,6 +1,10 @@
 import nodemailer from 'nodemailer';
 
 const sendMail = async (options) => {
+    console.log("Attempting to send mail to:", options.email);
+    console.log("Using SMTP_MAIL:", process.env.SMTP_MAIL);
+    console.log("Using SMTP_SERVICE:", process.env.SMTP_SERVICE);
+
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
