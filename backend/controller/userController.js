@@ -18,63 +18,34 @@ router.post(
     upload.single("file"),
     catchAsyncErrors(async (req, res, next) => {
         const { name, email, password } = req.body;
-        console.log("DEBUG: create-user hit");
-        console.log("DEBUG: SMTP_MAIL is:", process.env.SMTP_MAIL);
 
-
-        try {
-            /* ---------- FILE CHECK ---------- */
-            if (!req.file) {
-                console.error("Avatar missing");
-                return next(new ErrorHandler("Avatar is required", 400));
-            }
-
-            /* ---------- DUPLICATE USER CHECK ---------- */
-            const existingUser = await User.findOne({ email });
-            if (existingUser) {
-                return next(new ErrorHandler("User already exists", 400));
-            }
-
-            /* ---------- PREPARE USER DATA ---------- */
-            const userData = {
-                name,
-                email,
-                password,
-                avatar: req.file.path, // Cloudinary URL
-            };
-
-            /* ---------- CREATE TOKEN ---------- */
-            let activationToken;
-            try {
-                activationToken = createActivationToken(userData);
-            } catch (error) {
-                console.error("JWT creation failed:", error.message);
-                return next(new ErrorHandler("Token generation failed", 500));
-            }
-
-            const activationUrl = `https://multi-vendor-mern-stack-frontend.vercel.app/activation/${activationToken}`;
-
-            /* ---------- SEND MAIL ---------- */
-            try {
-                await sendMail({
-                    email,
-                    subject: "Activate your account",
-                    message: `Hello ${name},\n\nPlease click the link below to activate your account:\n${activationUrl}`,
-                });
-            } catch (error) {
-                console.error("Email sending failed:", error.message);
-                return next(new ErrorHandler(`Failed to send activation email: ${error.message}`, 500));
-            }
-
-            /* ---------- SUCCESS RESPONSE ---------- */
-            res.status(201).json({
-                success: true,
-                message: `Please check your email ${email} to activate your account`,
-            });
-        } catch (error) {
-            console.error("Unexpected create-user error:", error);
-            return next(new ErrorHandler("Internal server error", 500));
+        if (!req.file) {
+            return next(new ErrorHandler("Avatar is required", 400));
         }
+
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return next(new ErrorHandler("User already exists", 400));
+        }
+
+        // ✅ Upload buffer to Cloudinary
+        const avatarUrl = await uploadToCloudinary(req.file.buffer, "avatars");
+
+        const userData = { name, email, password, avatar: avatarUrl };
+
+        const activationToken = createActivationToken(userData);
+        const activationUrl = `https://multi-vendor-mern-stack-frontend.vercel.app/activation/${activationToken}`;
+
+        await sendMail({
+            email,
+            subject: "Activate your account",
+            message: `Hello ${name},\n\nPlease click the link below to activate your account:\n${activationUrl}`,
+        });
+
+        res.status(201).json({
+            success: true,
+            message: `Please check your email ${email} to activate your account`,
+        });
     }),
 );
 
