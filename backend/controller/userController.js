@@ -219,12 +219,12 @@ router.put(
     catchAsyncErrors(async (req, res, next) => {
         try {
             // Old avatar is on Cloudinary — no local file deletion needed
+            const avatarUrl = await uploadToCloudinary(req.file.buffer, "avatars");
             const user = await User.findByIdAndUpdate(
                 req.user.id,
-                { avatar: req.file.path }, // Cloudinary URL
+                { avatar: avatarUrl },
                 { new: true },
             );
-
             res.status(200).json({
                 success: true,
                 user,
