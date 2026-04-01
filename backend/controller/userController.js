@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { isAuthenticated } from "./../middleware/auth.js";
 import User from "../model/user.model.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
-import { upload } from "../multer.js";
+import { upload, uploadToCloudinary } from "../multer.js";
 import catchAsyncErrors from "../middleware/catchAsyncError.js";
 import sendToken from "../utils/jwtToken.js";
 import sendMail from "../utils/sendMail.js";
