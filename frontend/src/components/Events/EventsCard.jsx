@@ -30,7 +30,7 @@ const EventsCard = ({ active, data }) => {
         <div className={`w-full block bg-white rounded-lg ${active ? "unset" : "mb-12"} lg:flex p-2 mb-12`}>
 
             <div className="w-full lg:-w[50%] m-auto">
-                <img src={`${backend_url}upload/${data.images[0]}`} alt="" />
+                <img src={`${data.images[0]}`} alt="" />
             </div>
             <div className="w-full lg:[w-50%] flex flex-col justify-center ml-4">
                 <h2 className={`${styles.productTitle}`}>{data.name}</h2>

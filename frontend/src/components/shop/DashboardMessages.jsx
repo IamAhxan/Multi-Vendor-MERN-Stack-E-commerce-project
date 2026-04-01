@@ -212,7 +212,7 @@ const MessageList = ({ data, index, setOpen, setCurrentChat, me, setSellerInboxU
             setActive(index) ||
             handleClick(data._id) || setCurrentChat(data)}  >
             <div className="relative">
-                <img src={`${backend_url}upload/${userData?.avatar}`} alt="" className="w-[50px] h-[50px] rounded-full" />
+                <img src={`${userData?.avatar}`} alt="" className="w-[50px] h-[50px] rounded-full" />
                 {
                     online ? (
                         <div className="w-[12px] h-[12px] bg-green-400 rounded-full absolute top-[2px] right-[2px]"></div>
@@ -238,7 +238,7 @@ const SellerInbox = ({ setOpen, newMessage, setNewMessage, sendMessageHandler, m
             {/* Message Header */}
             <div className="w-full flex p-3 items-center justify-between bg-slate-200">
                 <div className="flex">
-                    <img src={`${backend_url}upload/${userData.avatar}`} alt="" className="w-[60px] h-[60px] rounded-full" />
+                    <img src={`${userData.avatar}`} alt="" className="w-[60px] h-[60px] rounded-full" />
                     <div className="pl-3">
                         <h1 className="text-[18px] font-[600]">{userData?.name}</h1>
                         <h1>{activeStatus ? "Active Now" : "Offline"}</h1>
@@ -256,7 +256,7 @@ const SellerInbox = ({ setOpen, newMessage, setNewMessage, sendMessageHandler, m
                         <div className={`flex w-full my-2 ${item.sender === sellerId ? "justify-end" : "justify-start"}`}>
                             {
                                 item.sender !== sellerId && (
-                                    <img src={`${backend_url}upload/${userData.avatar}`} alt="" className='w-[40px] h-[40px] rounded-full mr-3' />
+                                    <img src={`${userData.avatar}`} alt="" className='w-[40px] h-[40px] rounded-full mr-3' />
 
 
                                 )

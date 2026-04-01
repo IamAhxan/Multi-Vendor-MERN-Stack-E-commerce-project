@@ -80,7 +80,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
 
                         <div className="block w-full 800px:flex">
                             <div className="full 800px:w-[50%]">
-                                <img src={`${backend_url}upload/${data?.images?.[0]}`} alt="" />
+                                <img src={`${data?.images?.[0]}`} alt="" />
                                 <div className="flex">
                                     <img
                                         src={data.shop.avatar}

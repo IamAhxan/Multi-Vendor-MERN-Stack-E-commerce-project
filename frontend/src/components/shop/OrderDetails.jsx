@@ -74,7 +74,7 @@ const OrderDetails = () => {
             {
                 data && data?.cart?.map((item, index) => (
                     <div className="w-full flex items-center mb-5">
-                        <img src={`${backend_url}upload/${item.images[0]}`} alt="" className="w-[80px] h-[80px]" />
+                        <img src={`${item.images[0]}`} alt="" className="w-[80px] h-[80px]" />
 
                         <div className="w-full">
                             <h5 className="pl-3 text-[20px] ">{item.name}</h5>

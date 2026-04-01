@@ -223,7 +223,7 @@ const MessageList = ({ data, index, setOpen, setCurrentChat, me, setUserInboxSel
         >
             <div className="relative">
                 <img
-                    src={`${backend_url}upload/${userData?.avatar}`}
+                    src={`${userData?.avatar}`}
                     alt={userData?.name}
                     className="w-[50px] h-[50px] rounded-full"
                 />
@@ -254,7 +254,7 @@ const UserInboxChat = ({ setOpen, newMessage, setNewMessage, sendMessageHandler,
             <div className="w-full flex p-3 items-center justify-between bg-slate-200">
                 <div className="flex items-center">
                     <img
-                        src={`${backend_url}upload/${userData.avatar}`}
+                        src={`${userData.avatar}`}
                         alt={userData.name}
                         className="w-[60px] h-[60px] rounded-full"
                     />
@@ -272,7 +272,7 @@ const UserInboxChat = ({ setOpen, newMessage, setNewMessage, sendMessageHandler,
                     <div key={index} className={`flex w-full my-2 ${item.sender === userId ? "justify-end" : "justify-start"}`}>
                         {item.sender !== userId && (
                             <img
-                                src={`${backend_url}upload/${userData.avatar}`}
+                                src={`${userData.avatar}`}
                                 alt={userData.name}
                                 className='w-[40px] h-[40px] rounded-full mr-3'
                             />

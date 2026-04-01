@@ -73,7 +73,7 @@ const ProductCard = ({ data, isEvent }) => {
                 {/* 3. FIX SRC WARNING: Use null instead of "" for fallback */}
                 <Link to={`${isEvent === true ? `/product/${data._id}?isEvent=true` : `/product/${data._id}`}`}>
                     <img
-                        src={data?.images?.length > 0 ? `${backend_url}upload/${data.images[0]}` : null}
+                        src={data?.images?.length > 0 ? `${data.images[0]}` : null}
                         alt={data?.name}
                         className='w-full h-[170px] object-contain'
                     />

@@ -48,7 +48,7 @@ const ShopInfo = ({ isOwner }) => {
             <div className="w-full py-5">
                 <div className="w-full flex items-center justify-center">
                     <img
-                        src={`${backend_url}upload/${data?.avatar}`}
+                        src={`${data?.avatar}`}
                         alt="Shop Avatar"
                         className="w-[150px] h-[150px] object-cover rounded-full border-[3px] border-[#3ad132]"
                     />

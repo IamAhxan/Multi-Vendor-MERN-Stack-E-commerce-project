@@ -95,7 +95,7 @@ const Header = ({ activeHeading }) => {
                                         <Link to={`/product/${i._id}`} key={index}>
                                             <div className="w-full flex items-center py-3 hover:bg-gray-100 transition">
                                                 <img
-                                                    src={`${backend_url}upload/${i.images[0]}`}
+                                                    src={`${i.images[0]}`}
                                                     alt=""
                                                     className="w-10 h-10 mr-2.5"
                                                 />
@@ -189,7 +189,7 @@ const Header = ({ activeHeading }) => {
                                 {isAuthenticated ? (
                                     <Link to="/profile">
                                         <img
-                                            src={`${backend_url}upload/${user.avatar}`}
+                                            src={`${user.avatar}`}
                                             className="w-[35px] h-[35px] rounded-full"
                                             alt="user"
                                         />
@@ -294,7 +294,7 @@ const Header = ({ activeHeading }) => {
                                                 <Link to={`/product/${product_name}`} key={index}>
                                                     <div className="w-full flex items-center py-3 hover:bg-gray-100 transition">
                                                         <img
-                                                            src={`${backend_url}upload/${i.images[0]}`}
+                                                            src={`${i.images[0]}`}
                                                             alt=""
                                                             className="w-10 h-10 mr-2.5"
                                                         />
@@ -339,7 +339,7 @@ const Header = ({ activeHeading }) => {
                                             <div className="">
                                                 <Link to="/profile">
                                                     <img
-                                                        src={`${backend_url}upload/${user?.avatar}`}
+                                                        src={`${user?.avatar}`}
                                                         alt=""
                                                         className="w-[60px] h-[60px] rounded-full border-[3px] border-[#0eae88]"
                                                     />
