@@ -21,7 +21,6 @@ const ShopInfo = ({ isOwner }) => {
         setIsLoading(true);
         axios.get(`${server}/shop/get-shop-info/${id}`)
             .then((res) => {
-                console.log("API response:", res.data); // ← log full response
                 setData(res.data.shop);
                 setIsLoading(false);
             })
