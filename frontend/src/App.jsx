@@ -93,6 +93,11 @@ function App() {
               <UserInbox />
             </ProtectedRoute>
           } />
+          <Route path="/conversation/:id" element={
+            <ProtectedRoute>
+              <UserInbox />
+            </ProtectedRoute>
+          } />
           <Route path="/user/order/:id" element={
             <ProtectedRoute>
               <OrderDetailsPage />

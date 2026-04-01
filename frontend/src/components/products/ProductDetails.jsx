@@ -58,7 +58,7 @@ const ProductDetails = ({ data }) => {
 
     const totalReviewsLength = products && products.reduce((acc, product) => acc + product.reviews.length, 0);
 
-    const totalRatings = products && products.reduce((acc, product) => acc + product.reviews.reduce((sum, review) => sum + review.rating), 0);
+    const totalRatings = products && products.reduce((acc, product) => acc + product.reviews.reduce((sum, review) => sum + review.rating, 0), 0);
 
     const averageRating = (totalRatings / totalReviewsLength) || 0;
 
@@ -202,7 +202,7 @@ const ProductDetails = ({ data }) => {
                                 <div className="flex items-center pt-8">
                                     <Link to={`/shop/preview/${data?.shop._id}`}>
                                         <img
-                                            src={`${data?.shop?.avatar}`}
+                                            src={`${data?.shop?.avatar || null}`}
                                             alt=""
                                             className="w-[50px] h-[50px] rounded-full mr-2 object-cover"
                                         />
