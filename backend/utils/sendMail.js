@@ -6,16 +6,13 @@ const sendMail = async (options) => {
     console.log("Using SMTP_SERVICE:", process.env.SMTP_SERVICE);
 
     const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false, // Port 587 is STARTTLS, so secure is false
+        service: "gmail",
         auth: {
             user: process.env.SMTP_MAIL,
             pass: process.env.SMTP_PASSWORD ? process.env.SMTP_PASSWORD.replace(/\s+/g, '') : ''
         },
-        tls: {
-            rejectUnauthorized: false // Helps avoid connection issues on some networks
-        }
+        connectionTimeout: 5000, // 5 seconds
+        greetingTimeout: 5000, // 5 seconds
     })
 
     const mailOptions = {

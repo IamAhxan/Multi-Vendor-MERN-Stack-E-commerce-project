@@ -24,6 +24,9 @@ router.post(
     upload.single("file"),
     catchAsyncErrors(async (req, res, next) => {
         const { name, email, password } = req.body;
+        console.log("DEBUG: create-user hit");
+        console.log("DEBUG: SMTP_MAIL is:", process.env.SMTP_MAIL);
+
 
         try {
             /* ---------- FILE CHECK ---------- */
