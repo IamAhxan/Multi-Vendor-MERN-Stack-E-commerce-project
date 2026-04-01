@@ -1,3 +1,3 @@
-export const server = "https://multi-vendor-backend-q64b.onrender.com"
+export const server = "https://multivender-backend-three.vercel.app"
 
-export const backend_url = "https://multi-vendor-backend-q64b.onrender.com/"
+export const backend_url = "https://multivender-backend-three.vercel.app/"
