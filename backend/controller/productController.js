@@ -6,7 +6,6 @@ import ErrorHandler from "../utils/ErrorHandler.js";
 import Shop from "../model/shop.model.js";
 import { upload } from "../multer.js";
 import { isAuthenticated, isSeller } from "../middleware/auth.js";
-import fs from "fs";
 
 // Create Product
 
@@ -22,7 +21,7 @@ router.post(
         return next(new ErrorHandler("Shop id is invalid", 400));
       } else {
         const files = req.files;
-        const imageUrls = files.map((file) => `${file.filename}`);
+        const imageUrls = files.map((file) => file.path); // Cloudinary HTTPS URLs
         const productData = req.body;
         productData.images = imageUrls;
         productData.shop = shop;
@@ -66,15 +65,6 @@ router.delete(
     try {
       const productId = req.params.id;
       const productData = await Product.findById(productId);
-      productData.images.forEach((imageUrl) => {
-        const filename = imageUrl;
-        const filePath = `upload/${filename}`;
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.log(err);
-          }
-        });
-      });
       const product = await Product.findByIdAndDelete(productId);
 
       if (!product) {

@@ -137,8 +137,6 @@
 
 
 import express from "express";
-import path from "path";
-import fs from "fs";
 import jwt from "jsonwebtoken";
 import Shop from "../model/shop.model.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
@@ -147,11 +145,6 @@ import catchAsyncErrors from "../middleware/catchAsyncError.js";
 import sendMail from "../utils/sendMail.js";
 import sendShopToken from "../utils/shopToken.js";
 import { isAuthenticated, isSeller } from './../middleware/auth.js'
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 
 const router = express.Router();
 
@@ -178,23 +171,15 @@ router.post(
             // 1. Check if seller already exists
             const sellerEmail = await Shop.findOne({ email });
             if (sellerEmail) {
-                // If there's an uploaded file, delete it before throwing error
-                if (req.file) {
-                    const filePath = path.join(process.cwd(), "upload", req.file.filename);
-                    if (fs.existsSync(filePath)) {
-                        fs.unlinkSync(filePath);
-                    }
-                }
                 return next(new ErrorHandler("Seller already exists", 400));
             }
 
             // 2. Structure seller data
-            const filename = req.file ? req.file.filename : "";
             const sellerData = {
                 name,
                 email,
-                password, // Ensure your Shop model hashes this password in a .pre("save") hook
-                avatar: filename,
+                password,
+                avatar: req.file ? req.file.path : "", // Cloudinary URL
                 address,
                 phoneNumber,
                 zipCode,
@@ -365,16 +350,15 @@ router.get("/logout", isAuthenticated, catchAsyncErrors(async (req, res, next) =
         res.cookie("seller_token", null, {
             expires: new Date(Date.now()),
             httpOnly: true,
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: process.env.NODE_ENV === 'production',
         });
         res.status(201).json({
             success: true,
             message: "Logout successfully"
         });
-
-
     } catch (error) {
         return next(new ErrorHandler(error.message, 500))
-
     }
 }))
 
@@ -404,30 +388,10 @@ router.put(
     upload.single("image"),
     catchAsyncErrors(async (req, res, next) => {
         try {
-            const existsUser = await Shop.findById(req.seller._id);
-
-            // Safely handle the old avatar deletion
-            if (existsUser.avatar) {
-                // Note: Adjust "../../uploads" based on your actual folder structure relative to this file
-                const existAvatarPath = path.join(
-                    __dirname,
-                    "../../upload",
-                    existsUser.avatar,
-                );
-                console.log("Full path to delete:", existAvatarPath); // Check your terminal for this!
-
-                if (fs.existsSync(existAvatarPath)) {
-                    fs.unlinkSync(existAvatarPath);
-                } else {
-                    console.log("File not found at this path, skipping deletion.");
-                }
-            }
-
-            const fileUrl = req.file.filename;
-
+            // Old avatar is on Cloudinary — no local file deletion needed
             const shop = await Shop.findByIdAndUpdate(
                 req.seller._id,
-                { avatar: fileUrl },
+                { avatar: req.file.path }, // Cloudinary URL
                 { new: true },
             );
 
@@ -436,8 +400,6 @@ router.put(
                 shop,
             });
         } catch (error) {
-            // Now that __dirname is defined, this catch block shouldn't trigger
-            // unless there's a different issue.
             return next(new ErrorHandler(error.message, 500));
         }
     }),

@@ -15,7 +15,7 @@ router.post(
             const messageData = req.body;
             if (req.files) {
                 const files = req.files;
-                const imageUrls = files.map((file) => `${file.fileName}`);
+                const imageUrls = files.map((file) => file.path); // Cloudinary HTTPS URLs
 
                 messageData.images = imageUrls;
             }

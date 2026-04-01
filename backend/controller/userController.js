@@ -1,6 +1,4 @@
 import express from "express";
-import path from "path";
-import fs from "fs";
 import jwt from "jsonwebtoken";
 import { isAuthenticated } from "./../middleware/auth.js";
 import User from "../model/user.model.js";
@@ -9,10 +7,6 @@ import { upload } from "../multer.js";
 import catchAsyncErrors from "../middleware/catchAsyncError.js";
 import sendToken from "../utils/jwtToken.js";
 import sendMail from "../utils/sendMail.js";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
@@ -38,16 +32,6 @@ router.post(
             /* ---------- DUPLICATE USER CHECK ---------- */
             const existingUser = await User.findOne({ email });
             if (existingUser) {
-                const filePath = `upload/${req.file.filename}`;
-
-                fs.unlink(filePath, (err) => {
-                    if (err) {
-                        console.error("Error deleting file:", err.message);
-                    } else {
-                        console.log("File deleted successfully:", filePath);
-                    }
-                });
-
                 return next(new ErrorHandler("User already exists", 400));
             }
 
@@ -56,7 +40,7 @@ router.post(
                 name,
                 email,
                 password,
-                avatar: path.join("upload", req.file.filename),
+                avatar: req.file.path, // Cloudinary URL
             };
 
             /* ---------- CREATE TOKEN ---------- */
@@ -208,6 +192,8 @@ router.get(
             res.cookie("token", null, {
                 expires: new Date(Date.now()),
                 httpOnly: true,
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+                secure: process.env.NODE_ENV === 'production',
             });
             res.status(201).json({
                 success: true,
@@ -261,30 +247,10 @@ router.put(
     upload.single("image"),
     catchAsyncErrors(async (req, res, next) => {
         try {
-            const existsUser = await User.findById(req.user.id);
-
-            // Safely handle the old avatar deletion
-            if (existsUser.avatar) {
-                // Note: Adjust "../../uploads" based on your actual folder structure relative to this file
-                const existAvatarPath = path.join(
-                    __dirname,
-                    "../../upload",
-                    existsUser.avatar,
-                );
-                console.log("Full path to delete:", existAvatarPath); // Check your terminal for this!
-
-                if (fs.existsSync(existAvatarPath)) {
-                    fs.unlinkSync(existAvatarPath);
-                } else {
-                    console.log("File not found at this path, skipping deletion.");
-                }
-            }
-
-            const fileUrl = req.file.filename;
-
+            // Old avatar is on Cloudinary — no local file deletion needed
             const user = await User.findByIdAndUpdate(
                 req.user.id,
-                { avatar: fileUrl },
+                { avatar: req.file.path }, // Cloudinary URL
                 { new: true },
             );
 
@@ -293,8 +259,6 @@ router.put(
                 user,
             });
         } catch (error) {
-            // Now that __dirname is defined, this catch block shouldn't trigger
-            // unless there's a different issue.
             return next(new ErrorHandler(error.message, 500));
         }
     }),

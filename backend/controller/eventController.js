@@ -5,7 +5,6 @@ import Shop from "../model/shop.model.js";
 import catchAsyncErrors from "../middleware/catchAsyncError.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
 import { upload } from "../multer.js";
-import fs from "fs"
 import { isSeller } from "../middleware/auth.js";
 
 
@@ -20,7 +19,7 @@ router.post("/create-event", upload.array("images"), catchAsyncErrors(async (req
             return next(new ErrorHandler("Shop id is invalid", 400))
         } else {
             const files = req.files;
-            const imageUrls = files.map((file) => `${file.filename}`);
+            const imageUrls = files.map((file) => file.path); // Cloudinary HTTPS URLs
             const eventData = req.body;
             eventData.images = imageUrls;
             eventData.shop = shop;
@@ -59,16 +58,6 @@ router.delete("/delete-shop-events/:id", isSeller, catchAsyncErrors(async (req, 
         const productId = req.params.id;
 
         const eventData = await Event.findById(productId);
-
-        eventData.images.forEach((imageUrl) => {
-            const filename = imageUrl;
-            const filePath = `upload/${filename}`
-            fs.unlink(filePath, (err) => {
-                if (err) {
-                    console.log(err)
-                }
-            })
-        })
 
         const event = await Event.findByIdAndDelete(productId);
 
