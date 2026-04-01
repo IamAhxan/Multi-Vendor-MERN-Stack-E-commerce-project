@@ -140,7 +140,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import Shop from "../model/shop.model.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
-import { upload } from "../multer.js";
+import { upload, uploadToCloudinary } from "../multer.js";
 import catchAsyncErrors from "../middleware/catchAsyncError.js";
 import sendMail from "../utils/sendMail.js";
 import sendShopToken from "../utils/shopToken.js";
@@ -168,45 +168,39 @@ router.post(
         try {
             const { name, email, password, address, phoneNumber, zipCode } = req.body;
 
-            // 1. Check if seller already exists
             const sellerEmail = await Shop.findOne({ email });
             if (sellerEmail) {
                 return next(new ErrorHandler("Seller already exists", 400));
             }
 
-            // 2. Structure seller data
+            // ✅ Upload avatar to Cloudinary
+            const avatarUrl = req.file
+                ? await uploadToCloudinary(req.file.buffer, "avatars")
+                : "";
+
             const sellerData = {
-                name,
-                email,
-                password,
-                avatar: req.file ? req.file.path : "", // Cloudinary URL
-                address,
-                phoneNumber,
-                zipCode,
+                name, email, password,
+                avatar: avatarUrl,  // ✅ now defined
+                address, phoneNumber, zipCode,
             };
 
-            // 3. Create activation token
             if (!process.env.ACTIVATION_SECRET) {
                 return next(new ErrorHandler("Internal Server Error: Secret missing", 500));
             }
+
             const activationToken = createActivationToken(sellerData);
-
-            // 4. Send Email
             const activationUrl = `https://multi-vendor-mern-stack-frontend.vercel.app/seller/activation/${activationToken}`;
-            try {
-                await sendMail({
-                    email: sellerData.email,
-                    subject: "Activate your Shop Account",
-                    message: `Hello ${sellerData.name}, please click the link to activate your shop: ${activationUrl}`,
-                });
 
-                res.status(201).json({
-                    success: true,
-                    message: `Please check your email: ${sellerData.email} to activate your shop!`,
-                });
-            } catch (mailError) {
-                return next(new ErrorHandler(`Failed to send activation email: ${mailError.message}`, 500));
-            }
+            await sendMail({
+                email: sellerData.email,
+                subject: "Activate your Shop Account",
+                message: `Hello ${sellerData.name}, please click the link to activate your shop: ${activationUrl}`,
+            });
+
+            res.status(201).json({
+                success: true,
+                message: `Please check your email: ${sellerData.email} to activate your shop!`,
+            });
         } catch (error) {
             return next(new ErrorHandler(error.message, 400));
         }
@@ -388,10 +382,16 @@ router.put(
     upload.single("image"),
     catchAsyncErrors(async (req, res, next) => {
         try {
-            // Old avatar is on Cloudinary — no local file deletion needed
+            if (!req.file) {
+                return next(new ErrorHandler("Image is required", 400));
+            }
+
+            // ✅ Upload buffer to Cloudinary
+            const avatarUrl = await uploadToCloudinary(req.file.buffer, "avatars");
+
             const shop = await Shop.findByIdAndUpdate(
                 req.seller._id,
-                { avatar: req.file.path }, // Cloudinary URL
+                { avatar: avatarUrl },
                 { new: true },
             );
 
