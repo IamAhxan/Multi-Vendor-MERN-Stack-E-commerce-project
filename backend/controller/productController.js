@@ -4,7 +4,7 @@ import Product from "../model/product.js";
 import catchAsyncErrors from "../middleware/catchAsyncError.js";
 import ErrorHandler from "../utils/ErrorHandler.js";
 import Shop from "../model/shop.model.js";
-import { upload } from "../multer.js";
+import { upload, uploadToCloudinary } from "../multer.js";
 import { isAuthenticated, isSeller } from "../middleware/auth.js";
 
 // Create Product
@@ -19,20 +19,28 @@ router.post(
 
       if (!shop) {
         return next(new ErrorHandler("Shop id is invalid", 400));
-      } else {
-        const files = req.files;
-        const imageUrls = files.map((file) => file.path); // Cloudinary HTTPS URLs
-        const productData = req.body;
-        productData.images = imageUrls;
-        productData.shop = shop;
-
-        const product = await Product.create(productData);
-
-        res.status(201).json({
-          success: true,
-          product,
-        });
       }
+
+      const files = req.files;
+      if (!files || files.length === 0) {
+        return next(new ErrorHandler("Product images are required", 400));
+      }
+
+      // ✅ Upload all images to Cloudinary
+      const imageUrls = await Promise.all(
+        files.map((file) => uploadToCloudinary(file.buffer, "products"))
+      );
+
+      const productData = req.body;
+      productData.images = imageUrls;
+      productData.shop = shop;
+
+      const product = await Product.create(productData);
+
+      res.status(201).json({
+        success: true,
+        product,
+      });
     } catch (error) {
       return next(new ErrorHandler(error, 400));
     }
